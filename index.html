@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Proposal Generator — Live Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-surface: #141414;
+            --bg-card: #1a1a1a;
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent: #2563EB;
+            --accent-glow: rgba(37, 99, 235, 0.35);
+            --accent-gradient: linear-gradient(135deg, #2563EB, #7C3AED);
+            --success-green: #30D158;
+            --danger-red: #FF453A;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+            --iphone-width: min(26vw, 42vh, 320px);
+            --iphone-height: calc(var(--iphone-width) * 2.164);
+            --iphone-radius: calc(var(--iphone-width) * 0.165);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+        }
+
+        /* ── Custom Cursor ── */
+        .custom-cursor {
+            position: fixed;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            background: var(--text-primary);
+        }
+
+        /* ── Top Header ── */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 200;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .brand {
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--text-primary);
+            transition: opacity 0.4s ease;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lang-toggle,
+        .fs-toggle {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-secondary);
+            font-family: var(--font-main);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            padding: 0.35rem 0.75rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .lang-toggle:hover,
+        .fs-toggle:hover {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ── Slider ── */
+        .presentation-wrapper {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider {
+            display: flex;
+            width: 300vw;
+            height: 100vh;
+            transition: transform 0.9s var(--ease-in-out);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ── Ambient Glow ── */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55vw;
+            height: 55vw;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-blue {
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        }
+
+        .glow-red {
+            background: radial-gradient(circle, rgba(255, 69, 58, 0.2) 0%, transparent 70%);
+        }
+
+        .slide.active .ambient-glow {
+            opacity: 0.7;
+        }
+
+        /* ── Slide Label ── */
+        .slide-label {
+            position: absolute;
+            top: 5rem;
+            right: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            transform: translateY(-15px);
+            transition: all 0.6s var(--ease-out-expo) 0.2s;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .slide.active .slide-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .label-tag {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .label-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* ── iPhone Mockup ── */
+        .iphone-mockup {
+            position: relative;
+            width: var(--iphone-width);
+            height: var(--iphone-height);
+            background: #1c1c1e;
+            border-radius: var(--iphone-radius);
+            border: 2px solid #333;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                0 0 60px var(--accent-glow);
+            overflow: hidden;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        /* Dynamic Island */
+        .iphone-mockup::before {
+            content: '';
+            position: absolute;
+            top: calc(var(--iphone-width) * 0.055);
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(var(--iphone-width) * 0.38);
+            height: calc(var(--iphone-width) * 0.09);
+            background: #000;
+            border-radius: 100px;
+            z-index: 50;
+        }
+
+        /* Home Indicator */
+        .iphone-mockup::after {
+            content: '';
+            position: absolute;
+            bottom: calc(var(--iphone-width) * 0.02);
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(var(--iphone-width) * 0.38);
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 100px;
+            z-index: 50;
+        }
+
+        .iphone-status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--iphone-width) * 0.17);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 calc(var(--iphone-width) * 0.1);
+            padding-bottom: 3px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            z-index: 40;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .status-icons svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--text-primary);
+        }
+
+        .iphone-screen {
+            position: absolute;
+            top: calc(var(--iphone-width) * 0.17);
+            left: 0;
+            right: 0;
+            bottom: calc(var(--iphone-width) * 0.055);
+            overflow: hidden;
+        }
+
+        /* ── SLIDE 1 — CIBLE ── */
+        .slide-cible .iphone-mockup {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s var(--ease-out-expo) 0.3s;
+        }
+
+        .slide-cible.active .iphone-mockup {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stage-text {
+            position: absolute;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s var(--ease-out-expo);
+        }
+
+        .slide.active .stage-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stage-text-left {
+            left: 4vw;
+            top: 50%;
+            transform: translateY(-50%) translateY(30px);
+            max-width: 30vw;
+            text-align: left;
+            transition-delay: 0.5s;
+        }
+
+        .slide.active .stage-text-left {
+            transform: translateY(-50%) translateY(0);
+        }
+
+        .stage-text-right {
+            right: 3vw;
+            top: 50%;
+            transform: translateY(-50%) translateY(30px);
+            max-width: 28vw;
+            transition-delay: 0.7s;
+        }
+
+        .slide.active .stage-text-right {
+            transform: translateY(-50%) translateY(0);
+        }
+
+        .stage-text h1 {
+            font-size: clamp(2.5rem, 4vw, 5rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        .stage-text .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 1rem;
+        }
+
+        /* iPhone video background */
+        .iphone-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* Persona carousel inside iPhone */
+        .persona-carousel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 5;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+            padding-top: 3rem;
+        }
+
+        .persona-card {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            text-align: left;
+            padding: 0;
+        }
+
+        .persona-card.active-persona {
+            display: flex;
+        }
+
+        .persona-label {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+            padding: 0 1.2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .persona-desc {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+            padding: 0 1.2rem;
+            margin-bottom: calc(var(--iphone-width) * 0.2);
+            position: relative;
+            z-index: 3;
+        }
+
+        .persona-indicator {
+            position: absolute;
+            bottom: calc(var(--iphone-width) * 0.08);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 20;
+        }
+
+        .persona-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transition: all 0.3s;
+        }
+
+        .persona-dot.active {
+            background: var(--accent);
+            width: 18px;
+            border-radius: 3px;
+        }
+
+        /* Right side persona detail */
+        .persona-detail {
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .detail-num {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .detail-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* ── SLIDE 2 — PROBLÈME ── */
+        .slide-probleme .iphone-mockup {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s var(--ease-out-expo) 0.2s;
+        }
+
+        .slide-probleme.active .iphone-mockup {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .slide-probleme .iphone-mockup {
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(255, 69, 58, 0.2);
+        }
+
+        /* Pain overlay (over video) */
+        .pain-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: calc(var(--iphone-width) * 0.08);
+            padding-bottom: calc(var(--iphone-width) * 0.12);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+        }
+
+        .pain-doc-header {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 0.4rem 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pain-loading-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .pain-loading-fill {
+            height: 100%;
+            background: var(--danger-red);
+            border-radius: 2px;
+            width: 0%;
+        }
+
+        .slide-probleme.active .pain-loading-fill {
+            animation: painLoading 4s ease-out 0.8s forwards;
+        }
+
+        @keyframes painLoading {
+            0% {
+                width: 0%;
+            }
+
+            70% {
+                width: 68%;
+            }
+
+            90% {
+                width: 72%;
+            }
+
+            100% {
+                width: 73%;
+            }
+        }
+
+        .pain-text-lines {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding-top: 0.3rem;
+        }
+
+        .text-line {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 3px;
+        }
+
+        .pain-clock {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem 0;
+        }
+
+        .pain-clock-time {
+            font-size: clamp(1.4rem, calc(var(--iphone-width) * 0.14), 2.2rem);
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+            color: var(--danger-red);
+            opacity: 0.9;
+        }
+
+        /* Floating stats */
+        .floating-stat {
+            position: absolute;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(25px);
+            transition: all 0.8s var(--ease-out-expo);
+        }
+
+        .slide-probleme.active .floating-stat {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-left-top {
+            left: 6vw;
+            top: 22vh;
+            transition-delay: 0.6s;
+        }
+
+        .stat-left-bottom {
+            left: 8vw;
+            bottom: 22vh;
+            transition-delay: 1.0s;
+        }
+
+        .stat-right-center {
+            right: 14vw;
+            top: 50%;
+            transition-delay: 1.4s;
+        }
+
+        .slide-probleme.active .stat-right-center {
+            transform: translateY(-50%);
+        }
+
+        .stat-number {
+            font-size: clamp(4rem, 7vw, 8rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: var(--text-primary);
+        }
+
+        .stat-number.stat-red {
+            color: var(--danger-red);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .stat-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            max-width: 220px;
+            margin-top: 0.25rem;
+            line-height: 1.4;
+        }
+
+        /* ── Inner Phone Stats (Slide 2) ── */
+        .iphone-inner-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+            z-index: 10;
+        }
+
+        .iphone-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .iphone-stat.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .iphone-stat-val {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        .iphone-stat-val.stat-red {
+            color: var(--danger-red);
+        }
+
+        .iphone-stat-title {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-align: right;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Hide 3rd stat on desktop since it's floating */
+        @media (min-width: 769px) {
+            .mobile-only-stat {
+                display: none !important;
+            }
+        }
+
+        /* ── SLIDE 3 — SOLUTION ── */
+        .iphone-solution {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 1s var(--ease-out-expo);
+        }
+
+        .slide-solution .iphone-solution {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+
+        .slide-solution.active .iphone-solution {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Shift left for email phase — phone goes far left and shrinks */
+        .slide-solution.phase-email .iphone-solution {
+            left: 8%;
+            transform: translate(-50%, -50%) scale(0.55);
+            opacity: 0.4;
+        }
+
+        /* Solution screen content switching */
+        .solution-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--iphone-width) * 0.18) calc(var(--iphone-width) * 0.08) calc(var(--iphone-width) * 0.06);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* Solution video — visible during dormant, hidden after */
+        .solution-video {
+            transition: opacity 0.6s ease;
+        }
+
+        .slide-solution.phase-voice .solution-video,
+        .slide-solution.phase-processing .solution-video,
+        .slide-solution.phase-complete .solution-video,
+        .slide-solution.phase-email .solution-video,
+        .slide-solution.phase-finale .solution-video {
+            opacity: 0;
+        }
+
+        /* Dormant screen: semi-transparent overlay over video */
+        .solution-dormant {
+            background: rgba(0, 0, 0, 0.55);
+        }
+
+        /* Phase visibility */
+        .slide-solution.phase-dormant .solution-dormant {
+            opacity: 1;
+        }
+
+        .slide-solution.phase-voice .solution-voice {
+            opacity: 1;
+        }
+
+        .slide-solution.phase-processing .solution-processing {
+            opacity: 1;
+        }
+
+        .slide-solution.phase-complete .solution-complete {
+            opacity: 1;
+        }
+
+        .slide-solution.phase-email .solution-complete {
+            opacity: 1;
+        }
+
+        /* Dormant screen */
+        .app-icon-ai {
+            width: calc(var(--iphone-width) * 0.28);
+            height: calc(var(--iphone-width) * 0.28);
+            background: var(--accent-gradient);
+            border-radius: calc(var(--iphone-width) * 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .app-icon-ai svg {
+            width: 60%;
+            height: 60%;
+        }
+
+        .app-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .tap-hint {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            animation: tapPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes tapPulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Voice screen */
+        .voice-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            height: 50px;
+            margin-bottom: 0.8rem;
+        }
+
+        .wave-bar {
+            width: 3px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: height 0.15s ease;
+        }
+
+        .voice-status {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+        }
+
+        .transcription {
+            font-size: 0.72rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            text-align: left;
+            width: 100%;
+            padding: 0 2%;
+            overflow: hidden;
+        }
+
+        .transcription.typing::after {
+            content: "\2502";
+            color: var(--accent);
+            animation: blink 0.6s step-end infinite;
+            margin-left: 1px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Processing screen */
+        .processing-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .processing-ring {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 0.8rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .processing-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .processing-steps {
+            text-align: left;
+            width: 88%;
+        }
+
+        .processing-step {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.45rem;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all 0.4s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .processing-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .step-check {
+            color: var(--success-green);
+            font-size: 0.8rem;
+        }
+
+        /* Complete screen */
+        .checkmark-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--success-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .slide-solution.phase-complete .checkmark-circle,
+        .slide-solution.phase-email .checkmark-circle {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checkmark-circle svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .complete-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        /* ── Laptop Mockup ── */
+        .laptop-mockup {
+            position: absolute;
+            right: -70vw;
+            top: 50%;
+            transform: translateY(-50%);
+            width: min(65vw, 900px);
+            z-index: 5;
+            transition: all 1.4s var(--ease-out-expo);
+        }
+
+        .slide-solution.phase-email .laptop-mockup {
+            right: 50%;
+            transform: translateY(-50%) translateX(55%);
+        }
+
+        .laptop-screen {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: #1c1c1e;
+            border-radius: 10px 10px 0 0;
+            border: 2px solid #333;
+            border-bottom: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .laptop-base {
+            width: 108%;
+            margin-left: -4%;
+            height: 12px;
+            background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+            border-radius: 0 0 6px 6px;
+            position: relative;
+        }
+
+        .laptop-base::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16%;
+            height: 3px;
+            background: #333;
+            border-radius: 0 0 3px 3px;
+        }
+
+        /* Email client inside laptop */
+        .email-client {
+            display: flex;
+            height: 100%;
+        }
+
+        .email-sidebar {
+            width: 38%;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            background: #141414;
+            padding: 0.6rem;
+            overflow: hidden;
+        }
+
+        .email-sidebar-header {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 0.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 0.4rem;
+        }
+
+        .email-item {
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            gap: 0.4rem;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .slide-solution.phase-email .email-item.unread {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 1.6s;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .email-dot {
+            width: 7px;
+            height: 7px;
+            min-width: 7px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-top: 3px;
+        }
+
+        .slide-solution.phase-email .email-dot {
+            animation: notifPulse 1.5s ease-in-out 1.8s 3;
+        }
+
+        @keyframes notifPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--accent-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px transparent;
+            }
+        }
+
+        .email-meta {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .email-sender {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-subject {
+            font-size: 0.55rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+
+        .email-time {
+            font-size: 0.5rem;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .email-body {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .email-body-header {
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            opacity: 0;
+            transition: opacity 0.5s ease 2.2s;
+        }
+
+        .slide-solution.phase-email .email-body-header {
+            opacity: 1;
+        }
+
+        .email-body-from {
+            font-size: 0.55rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            opacity: 0;
+            transition: opacity 0.5s ease 2.2s;
+        }
+
+        .slide-solution.phase-email .email-body-from {
+            opacity: 1;
+        }
+
+        .proposal-preview {
+            flex: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.6s var(--ease-out-expo) 2.4s;
+        }
+
+        .slide-solution.phase-email .proposal-preview {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .proposal-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* Proposal document inside email */
+        .proposal-doc {
+            background: #ffffff;
+            border-radius: 4px;
+            /* Sharper */
+            color: #111;
+            font-size: 0.45rem;
+            line-height: 1.6;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 0 1px #eaeaea;
+        }
+
+        .proposal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0.8rem 1.2rem 0.5rem;
+            border-bottom: 2px solid #111;
+            margin: 0 1.2rem;
+        }
+
+        .prop-logo {
+            font-size: 0.55rem;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+        }
+
+        .prop-logo span {
+            color: var(--accent);
+        }
+
+        .prop-meta {
+            text-align: right;
+            font-size: 0.35rem;
+            color: #666;
+            font-family: var(--font-mono);
+            line-height: 1.4;
+        }
+
+        .proposal-title-area {
+            padding: 1.2rem 1.2rem 0.8rem;
+        }
+
+        .prop-client-label {
+            font-size: 0.35rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #666;
+            margin-bottom: 0.4rem;
+        }
+
+        .proposal-title-area h2 {
+            font-size: 0.85rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: #111;
+        }
+
+        .proposal-body {
+            flex: 1;
+            padding: 0 1.2rem 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 0.6fr;
+            gap: 1.5rem;
+        }
+
+        .proposal-section-title {
+            font-size: 0.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #111;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .prop-col p {
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .prop-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .prop-list li {
+            position: relative;
+            padding-left: 0.6rem;
+            margin-bottom: 0.35rem;
+            color: #333;
+        }
+
+        .prop-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .prop-sidebar {
+            background: #f8fafc;
+            padding: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .prop-sidebar .proposal-section-title {
+            border-bottom-color: #e2e8f0;
+        }
+
+        .prop-price-huge {
+            font-size: 0.9rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #111;
+            margin-bottom: 0.1rem;
+        }
+
+        .prop-price-sub {
+            font-size: 0.38rem;
+            color: #666;
+            margin-bottom: 1rem !important;
+        }
+
+        .prop-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .pt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 0.2rem;
+        }
+
+        .pt-item:last-child {
+            border-bottom: none;
+        }
+
+        .pt-week {
+            font-family: var(--font-mono);
+            font-size: 0.35rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .pt-desc {
+            font-size: 0.4rem;
+            color: #111;
+            font-weight: 500;
+        }
+
+        /* ── Finale Celebration ── */
+        .finale-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .slide-solution.phase-finale .finale-overlay {
+            opacity: 1;
+        }
+
+        .finale-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .finale-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .finale-time {
+            font-size: clamp(5rem, 12vw, 14rem);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.8s var(--ease-out-expo);
+        }
+
+        .slide-solution.phase-finale .finale-time {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .finale-vs {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin: 0.8rem 0;
+            opacity: 0;
+            transition: opacity 0.6s ease 0.5s;
+        }
+
+        .slide-solution.phase-finale .finale-vs {
+            opacity: 1;
+        }
+
+        .finale-old {
+            font-size: clamp(2rem, 4vw, 4.5rem);
+            font-weight: 900;
+            color: var(--danger-red);
+            text-decoration: line-through;
+            text-decoration-thickness: 3px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.6s var(--ease-out-expo) 0.8s;
+        }
+
+        .slide-solution.phase-finale .finale-old {
+            opacity: 0.6;
+            transform: translateY(0);
+        }
+
+        .finale-tagline {
+            font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.6s ease 1.2s;
+        }
+
+        .slide-solution.phase-finale .finale-tagline {
+            opacity: 1;
+        }
+
+        /* Hide other elements during finale */
+        .slide-solution.phase-finale .iphone-solution {
+            opacity: 0;
+        }
+
+        .slide-solution.phase-finale .laptop-mockup {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .slide-solution.phase-finale .slide-label {
+            opacity: 0;
+        }
+
+        .slide-solution.phase-finale .ambient-glow {
+            width: 80vw;
+            height: 80vw;
+            opacity: 1;
+        }
+
+        /* Solution headline */
+        .solution-headline {
+            position: absolute;
+            left: 5vw;
+            bottom: 8vh;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s var(--ease-out-expo) 0.5s;
+        }
+
+        .slide-solution.active .solution-headline {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-solution.phase-email .solution-headline {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .solution-headline h1 {
+            font-size: clamp(2.2rem, 3.5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        /* ── Navigation ── */
+        .nav-zone {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 200;
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .nav-btn {
+            width: 3.5rem;
+            height: 2.8rem;
+            background: transparent;
+            border: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .nav-btn:last-child {
+            border-right: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent);
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.04);
+            z-index: 200;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.6s var(--ease-out-expo);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            :root {
+                --iphone-width: min(32vw, 40vh, 280px);
+            }
+
+            .stage-text-left {
+                left: 2vw;
+                max-width: 25vw;
+            }
+
+            .stage-text-right {
+                right: 2vw;
+                max-width: 18vw;
+            }
+
+            .stage-text h1 {
+                font-size: clamp(2rem, 4vw, 4rem);
+            }
+
+            .stat-number {
+                font-size: clamp(2.5rem, 5vw, 5rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --iphone-width: min(50vw, 240px);
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor {
+                display: none;
+            }
+
+            /* On mobile, title and content are separate full-screen views */
+            /* JS adds .mobile-phase-title or .mobile-phase-content to each slide */
+
+            /* Title: centered on screen, full viewport */
+            .stage-text {
+                position: absolute;
+                left: 50% !important;
+                top: 50% !important;
+                right: auto !important;
+                transform: translate(-50%, -50%) !important;
+                max-width: 85vw !important;
+                text-align: center;
+                transition: opacity 0.5s ease;
+            }
+
+            .stage-text h1 {
+                font-size: clamp(2rem, 8vw, 3rem);
+            }
+
+            .stage-text .subtitle {
+                font-size: 0.8rem;
+            }
+
+            .stage-text-right {
+                display: none;
+            }
+
+            /* Hide phone during title phase, show during content phase */
+            .slide.mobile-phase-title .iphone-mockup {
+                opacity: 0 !important;
+                transform: scale(0.85) !important;
+                pointer-events: none;
+            }
+
+            .slide.mobile-phase-title .stage-text-left {
+                opacity: 1 !important;
+            }
+
+            .slide.mobile-phase-content .stage-text-left {
+                opacity: 0 !important;
+                pointer-events: none;
+            }
+
+            .slide.mobile-phase-content .iphone-mockup {
+                opacity: 1 !important;
+                transform: scale(1) !important;
+            }
+
+            /* Hide desktop floating stats completely on mobile, we use inner stats instead */
+            .floating-stat {
+                display: none !important;
+            }
+
+            .stat-left-top {
+                left: 50% !important;
+                top: 6vh !important;
+                transform: translateX(-50%) !important;
+                right: auto !important;
+            }
+
+            .stat-left-bottom {
+                left: 3vw !important;
+                bottom: 10vh !important;
+                top: auto !important;
+                right: auto !important;
+            }
+
+            .stat-right-center {
+                right: 3vw !important;
+                top: 55% !important;
+                transform: translateY(-50%) !important;
+                left: auto !important;
+            }
+
+            .stat-number {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+                /* Reduced to fit mobile cards */
+            }
+
+            .stat-desc {
+                max-width: 130px;
+                /* Reduced width */
+                font-size: 0.6rem;
+                margin: 0 auto;
+            }
+
+            /* Fix persona text inside phone on mobile */
+            .persona-label {
+                font-size: 0.75rem;
+                padding: 0 0.8rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .persona-desc {
+                font-size: 0.55rem;
+                padding: 0 0.8rem;
+                margin-bottom: calc(var(--iphone-width) * 0.15);
+            }
+
+            /* Solution slide on mobile */
+            .iphone-solution {
+                position: absolute !important;
+                left: 50% !important;
+                top: 50% !important;
+            }
+
+            .slide-solution.mobile-phase-title .iphone-solution {
+                opacity: 0 !important;
+            }
+
+            .slide-solution.mobile-phase-title .solution-headline {
+                opacity: 1 !important;
+            }
+
+            .slide-solution.mobile-phase-content .solution-headline {
+                opacity: 0 !important;
+            }
+
+            .solution-headline {
+                position: absolute;
+                left: 50% !important;
+                bottom: auto !important;
+                top: 50%;
+                transform: translate(-50%, -50%) !important;
+                text-align: center;
+            }
+
+            .solution-headline h1 {
+                font-size: clamp(1.8rem, 7vw, 2.8rem);
+            }
+
+            /* Laptop on mobile */
+            .slide-solution.phase-email .iphone-solution {
+                display: none;
+            }
+
+            .laptop-mockup {
+                width: min(90vw, 500px) !important;
+            }
+
+            .slide-solution.phase-email .laptop-mockup {
+                right: 50% !important;
+                transform: translateY(-50%) translateX(50%) !important;
+            }
+
+            /* Finale */
+            .finale-time {
+                font-size: clamp(3rem, 16vw, 6rem) !important;
+            }
+
+            .finale-old {
+                font-size: clamp(1.5rem, 8vw, 3rem) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="brand" id="dynamicBrand">Qui sont vos clients?</div>
+        <div class="header-controls">
+            <button class="lang-toggle" id="langToggle">EN</button>
+            <button class="fs-toggle" id="fsToggle">PLEIN ÉCRAN</button>
+        </div>
+    </div>
+
+    <!-- Presentation -->
+    <div class="presentation-wrapper">
+        <div class="slider" id="slider">
+
+            <!-- SLIDE 1 — CIBLE -->
+            <section class="slide slide-cible active mobile-phase-title" id="slide-cible">
+                <div class="ambient-glow glow-blue"></div>
+                <div class="slide-label">
+                    <span class="label-tag">01</span>
+                    <span class="label-text t-label-1">CIBLE</span>
+                </div>
+
+                <div class="stage-text stage-text-left">
+                    <h1 class="t-h1-1">Les pro.<br>Qui vendent<br>Des services.</h1>
+                    <p class="subtitle t-sub-1">Consultants, agences, courtiers, construction, pigistes — tous ceux qui
+                        doivent produire des propositions pour gagner des mandats.</p>
+                </div>
+
+                <div class="iphone-mockup">
+                    <div class="iphone-status-bar">
+                        <span>9:41</span>
+                        <span class="status-icons">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="iphone-screen">
+                        <video class="iphone-video" autoplay muted loop playsinline preload="auto">
+                            <source src="assets/videos/cible_montage.mp4" type="video/mp4">
+                        </video>
+                        <div class="persona-carousel" id="personaCarousel">
+                            <div class="persona-card">
+                                <div class="persona-label t-m1-title">Consultants & Freelances</div>
+                                <div class="persona-desc t-m1-desc">Travaillent seuls, temps limité pour rédiger des
+                                    propositions convaincantes.</div>
+                            </div>
+                            <div class="persona-card">
+                                <div class="persona-label t-m2-title">Agences & PME</div>
+                                <div class="persona-desc t-m2-desc">Volume élevé de soumissions, besoin de standardiser
+                                    la qualité.</div>
+                            </div>
+                            <div class="persona-card">
+                                <div class="persona-label t-m3-title">Construction</div>
+                                <div class="persona-desc t-m3-desc">Propositions techniques complexes avec devis
+                                    détaillés et délais stricts.</div>
+                            </div>
+                        </div>
+                        <div class="persona-indicator">
+                            <div class="persona-dot active" data-index="0"></div>
+                            <div class="persona-dot" data-index="1"></div>
+                            <div class="persona-dot" data-index="2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stage-text stage-text-right">
+                    <div class="persona-detail" id="personaDetail">
+                        <div class="detail-num">01.01</div>
+                        <div class="detail-title">Consultants & Freelances</div>
+                        <div class="detail-desc">Travaillent seuls, temps limité pour rédiger des propositions
+                            convaincantes.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2 — PROBLÈME -->
+            <section class="slide slide-probleme" id="slide-probleme">
+                <div class="slide-label">
+                    <span class="label-tag">02</span>
+                    <span class="label-text t-label-2">PROBLÈME</span>
+                </div>
+
+                <div class="stage-text stage-text-left">
+                    <h1 class="t-h1-2">La rédaction<br>Prend Trop<br>De Temps.</h1>
+                    <p class="subtitle t-sub-2">Entre la collecte d'informations, la rédaction et la mise en page,
+                        chaque proposition est un investissement majeur sans rendement garanti.</p>
+                </div>
+
+                <div class="iphone-mockup">
+                    <div class="iphone-status-bar">
+                        <span>9:41</span>
+                        <span class="status-icons">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="iphone-screen">
+                        <video class="iphone-video" autoplay muted loop playsinline preload="auto">
+                            <source src="assets/videos/probleme_frustration.mp4" type="video/mp4">
+                        </video>
+                        <div class="pain-overlay">
+                            <!-- Inner stats (appear during clock animation) -->
+                            <div class="iphone-inner-stats" id="mobilePainStats">
+                                <div class="iphone-stat" id="mStat1">
+                                    <div class="iphone-stat-val">1H+</div>
+                                    <div class="iphone-stat-title t-m4-title">Temps Moyen</div>
+                                </div>
+                                <div class="iphone-stat" id="mStat2">
+                                    <div class="iphone-stat-val stat-red">62%</div>
+                                    <div class="iphone-stat-title t-m5-title">Pertes de Mandats</div>
+                                </div>
+                                <div class="iphone-stat mobile-only-stat" id="mStat3">
+                                    <div class="iphone-stat-val stat-red">0$</div>
+                                    <div class="iphone-stat-title t-m6-title">Coût de l'Inaction</div>
+                                </div>
+                            </div>
+
+                            <div class="pain-clock">
+                                <div class="pain-clock-time" id="painClock">00:00:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stage-text stage-text-right">
+                    <!-- Vide intentionnellement, garde la symétrie de flexbox sur desktop -->
+                </div>
+
+                <div class="floating-stat stat-right-center">
+                    <div class="stat-number stat-red">0$</div>
+                    <div class="stat-label t-m6-title">Coût de l'Inaction</div>
+                    <div class="stat-desc t-m6-desc">Revenu d'une proposition jamais envoyée. La friction bloque la
+                        vente.</div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3 — SOLUTION -->
+            <section class="slide slide-solution" id="slide-solution">
+                <div class="ambient-glow glow-blue"></div>
+                <div class="slide-label">
+                    <span class="label-tag">03</span>
+                    <span class="label-text t-label-3">SOLUTION</span>
+                </div>
+
+                <!-- iPhone (shifts left during email phase) -->
+                <div class="iphone-mockup iphone-solution" id="iphoneSolution">
+                    <div class="iphone-status-bar">
+                        <span>9:41</span>
+                        <span class="status-icons">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="iphone-screen">
+                        <!-- Video background for dormant phase -->
+                        <video class="iphone-video solution-video" id="solutionVideo" autoplay muted loop playsinline preload="auto">
+                            <source src="assets/videos/solution_dictation.mp4" type="video/mp4">
+                        </video>
+
+                        <!-- Phase: Dormant -->
+                        <div class="solution-screen solution-dormant">
+                            <div class="app-icon-ai">
+                                <svg viewBox="0 0 64 64" fill="none">
+                                    <circle cx="32" cy="30" r="27" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/>
+                                    <circle cx="32" cy="30" r="20" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+                                    <rect x="27" y="14" width="10" height="20" rx="5" fill="white"/>
+                                    <path d="M21 30c0 6.075 4.925 11 11 11s11-4.925 11-11" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="32" y1="41" x2="32" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="26" y1="48" x2="38" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="app-label">AI Proposal</div>
+                            <div class="tap-hint t-tap-hint">Appuyez pour dicter</div>
+                        </div>
+
+                        <!-- Phase: Voice -->
+                        <div class="solution-screen solution-voice">
+                            <div class="voice-indicator">
+                                <div class="waveform" id="waveform"></div>
+                                <div class="voice-status t-voice-status">Écoute en cours...</div>
+                            </div>
+                            <div class="transcription" id="transcription"></div>
+                        </div>
+
+                        <!-- Phase: Processing -->
+                        <div class="solution-screen solution-processing">
+                            <div class="processing-animation">
+                                <div class="processing-ring"></div>
+                                <div class="processing-text t-processing-text">Génération en cours...</div>
+                            </div>
+                            <div class="processing-steps" id="processingSteps"></div>
+                        </div>
+
+                        <!-- Phase: Complete -->
+                        <div class="solution-screen solution-complete">
+                            <div class="checkmark-circle">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                                </svg>
+                            </div>
+                            <div class="complete-text t-complete-text">Proposition envoyée!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laptop (offscreen right) -->
+                <div class="laptop-mockup" id="laptopMockup">
+                    <div class="laptop-screen">
+                        <div class="email-client">
+                            <div class="email-sidebar">
+                                <div class="email-sidebar-header">Inbox</div>
+                                <div class="email-item unread">
+                                    <div class="email-dot"></div>
+                                    <div class="email-meta">
+                                        <div class="email-sender">AI Proposal Generator</div>
+                                        <div class="email-subject t-email-subject">Nouvelle proposition — App mobile
+                                            gestion de rendez-vous</div>
+                                        <div class="email-time t-email-time">à l'instant</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="email-body">
+                                <div class="email-body-header t-email-body-title">Proposition — App mobile gestion de
+                                    rendez-vous</div>
+                                <div class="email-body-from">De: AI Proposal Generator &lt;noreply@aiprpsl.com&gt;</div>
+                                <div class="proposal-preview">
+                                    <div class="proposal-doc">
+                                        <div class="proposal-header">
+                                            <div class="prop-logo">IDEELAB<span>.</span></div>
+                                            <div class="prop-meta">
+                                                <div>DATE: 06.03.2026</div>
+                                                <div>REF: PR-089A</div>
+                                            </div>
+                                        </div>
+                                        <div class="proposal-title-area">
+                                            <div class="prop-client-label">PRÉPARÉ POUR ACME CORP</div>
+                                            <h2>Stratégie &amp; Développement<br>Application Mobile Native</h2>
+                                        </div>
+                                        <div class="proposal-body">
+                                            <div class="prop-col">
+                                                <div class="proposal-section-title">Synthèse Exécutive</div>
+                                                <p>Une approche holistique intégrant design system, développement natif
+                                                    et ingénierie cloud pour une mise en marché accélérée en 8 semaines.
+                                                </p>
+
+                                                <div class="proposal-section-title">Livrables Stratégiques</div>
+                                                <ul class="prop-list">
+                                                    <li>Recherche UX &amp; Architecture Info</li>
+                                                    <li>Design UI (Figma) &amp; Design System</li>
+                                                    <li>Développement App Native (React)</li>
+                                                    <li>Infrastructure Cloud (API &amp; DB)</li>
+                                                    <li>Assurance Qualité &amp; Déploiement Stores</li>
+                                                </ul>
+                                            </div>
+                                            <div class="prop-col prop-sidebar">
+                                                <div class="proposal-section-title">Budget Global</div>
+                                                <div class="prop-price-huge">25 000 $</div>
+                                                <p class="prop-price-sub">Phase 1 : MVP Complet + Déploiement</p>
+
+                                                <div class="proposal-section-title" style="margin-top:0.8rem;">
+                                                    Échéancier</div>
+                                                <div class="prop-timeline">
+                                                    <div class="pt-item">
+                                                        <div class="pt-desc">Design &amp; UX</div>
+                                                        <div class="pt-week">S1-S2</div>
+                                                    </div>
+                                                    <div class="pt-item">
+                                                        <div class="pt-desc">Dev Sprint 1</div>
+                                                        <div class="pt-week">S3-S5</div>
+                                                    </div>
+                                                    <div class="pt-item">
+                                                        <div class="pt-desc">Dev Sprint 2</div>
+                                                        <div class="pt-week">S6-S7</div>
+                                                    </div>
+                                                    <div class="pt-item">
+                                                        <div class="pt-desc">QA &amp; Lancement</div>
+                                                        <div class="pt-week">S8</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="laptop-base"></div>
+                </div>
+
+                <div class="solution-headline" id="solutionHeadline">
+                    <h1 class="t-h1-3">Générateur<br>Intelligent<br>De Propositions.</h1>
+                </div>
+
+                <!-- Finale celebration -->
+                <div class="finale-overlay" id="finaleOverlay">
+                    <canvas class="finale-canvas" id="finaleCanvas"></canvas>
+                    <div class="finale-content">
+                        <div class="finale-time" id="finaleTime">30 sec.</div>
+                        <div class="finale-vs t-finale-vs">au lieu de</div>
+                        <div class="finale-old">1h+</div>
+                        <div class="finale-tagline t-finale-tagline">L'humain décide. L'IA
+                            exécute.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-zone">
+        <button class="nav-btn" id="prevBtn" disabled>
+            <svg viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </button>
+        <button class="nav-btn" id="nextBtn">
+            <svg viewBox="0 0 24 24">
+                <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
+            </svg>
+        </button>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ── State ──
+            let currentSlide = 0;
+            const totalSlides = 3;
+            let solutionPhase = -1;
+            const solutionPhases = ['dormant', 'voice', 'processing', 'complete', 'email', 'finale'];
+            let isEnglish = false;
+            let painClockInterval = null;
+            let waveformInterval = null;
+            let personaInterval = null;
+            let currentPersona = 0;
+
+            // ── Elements ──
+            const slider = document.getElementById('slider');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressFill = document.getElementById('progressFill');
+            const slideSolution = document.getElementById('slide-solution');
+            const langToggle = document.getElementById('langToggle');
+            const fsToggle = document.getElementById('fsToggle');
+            const customCursor = document.getElementById('customCursor');
+
+            // ── Translations ──
+            const translations = {
+                fr: {
+                    'label-1': 'CIBLE', 'label-2': 'PROBLÈME', 'label-3': 'SOLUTION',
+                    'h1-1': 'Les pro.<br>Qui vendent<br>Des services.',
+                    'sub-1': 'Consultants, agences, courtiers, construction, pigistes — tous ceux qui doivent produire des propositions pour gagner des mandats.',
+                    'm1-title': 'Consultants & Freelances',
+                    'm1-desc': 'Travaillent seuls, temps limité pour rédiger des propositions convaincantes.',
+                    'm2-title': 'Agences & PME',
+                    'm2-desc': 'Volume élevé de soumissions, besoin de standardiser la qualité.',
+                    'm3-title': 'Construction',
+                    'm3-desc': 'Propositions techniques complexes avec devis détaillés et délais stricts.',
+                    'h1-2': 'La rédaction<br>Prend Trop<br>De Temps.',
+                    'sub-2': 'Entre la collecte d\'informations, la rédaction et la mise en page, chaque proposition est un investissement majeur sans rendement garanti.',
+                    'm4-title': 'Temps Moyen',
+                    'm4-desc': 'Temps requis pour rédiger une proposition professionnelle complète.',
+                    'm5-title': 'Pertes de Mandats',
+                    'm5-desc': 'Contrats perdus faute de pouvoir soumettre à temps face à la compétition.',
+                    'm6-title': "Coût de l'Inaction",
+                    'm6-desc': "Revenu d'une proposition jamais envoyée. La friction bloque la vente.",
+                    'h1-3': 'Générateur<br>Intelligent<br>De Propos.',
+                    'tap-hint': 'Appuyez pour dicter',
+                    'voice-status': 'Écoute en cours...',
+                    'processing-text': 'Génération en cours...',
+                    'complete-text': 'Proposition envoyée!',
+                    'email-subject': 'Nouvelle proposition — App mobile gestion de rendez-vous',
+                    'email-time': "à l'instant",
+                    'email-body-title': 'Proposition — App mobile gestion de rendez-vous',
+                    'transcription': "Mon client veut une app mobile pour gérer ses rendez-vous, budget 25 000$, livraison en 8 semaines.",
+                    'processing-steps': ['Analyse du brief...', 'Construction de la portée...', 'Génération des livrables...', 'Structure de prix...', 'Mise en page...'],
+                    'finale-vs': 'au lieu de',
+                    'finale-tagline': "L'humain décide. L'IA exécute.",
+                    'fs': 'PLEIN ÉCRAN',
+                    'brand': [
+                        'Qui sont vos clients?',
+                        'Le problème #1 des professionnels',
+                        'La solution en action'
+                    ],
+                },
+                en: {
+                    'label-1': 'TARGET', 'label-2': 'PROBLEM', 'label-3': 'SOLUTION',
+                    'h1-1': 'Pros.<br>Selling<br>Services.',
+                    'sub-1': 'Consultants, agencies, brokers, construction, freelancers — anyone who must produce proposals to win mandates.',
+                    'm1-title': 'Consultants & Freelancers',
+                    'm1-desc': 'Working alone, limited time to draft convincing proposals.',
+                    'm2-title': 'Agencies & SMBs',
+                    'm2-desc': 'High volume of submissions, need to standardize quality.',
+                    'm3-title': 'Construction',
+                    'm3-desc': 'Complex technical proposals with detailed quotes and strict timelines.',
+                    'h1-2': 'Drafting<br>Takes Too<br>Much Time.',
+                    'sub-2': 'Between gathering info, drafting, and formatting, every proposal is a major investment with no guaranteed return.',
+                    'm4-title': 'Average Time',
+                    'm4-desc': 'Time required to draft a professional and comprehensive business proposal.',
+                    'm5-title': 'Lost Mandates',
+                    'm5-desc': 'Contracts lost due to the inability to submit on time against competition.',
+                    'm6-title': 'Cost of Inaction',
+                    'm6-desc': 'Revenue from a proposal never sent. The friction of creation blocks the sale.',
+                    'h1-3': 'Intelligent<br>Proposal<br>Generator.',
+                    'tap-hint': 'Tap to dictate',
+                    'voice-status': 'Listening...',
+                    'processing-text': 'Generating...',
+                    'complete-text': 'Proposal sent!',
+                    'email-subject': 'New proposal — Appointment management mobile app',
+                    'email-time': 'just now',
+                    'email-body-title': 'Proposal — Appointment management mobile app',
+                    'transcription': "My client wants a mobile app to manage appointments, budget $25,000, delivery in 8 weeks.",
+                    'processing-steps': ['Analyzing brief...', 'Building scope...', 'Generating deliverables...', 'Structuring pricing...', 'Formatting proposal...'],
+                    'finale-vs': 'instead of',
+                    'finale-tagline': 'Humans decide. AI executes.',
+                    'fs': 'FULLSCREEN',
+                    'brand': [
+                        'Who are your clients?',
+                        'The #1 problem for professionals',
+                        'The solution in action'
+                    ],
+                }
+            };
+
+            // Persona data for right-side detail
+            const personaData = {
+                fr: [
+                    { num: '01.01', title: 'Consultants & Freelances', desc: 'Travaillent seuls, temps limité pour rédiger des propositions convaincantes.' },
+                    { num: '01.02', title: 'Agences & PME', desc: 'Volume élevé de soumissions, besoin de standardiser la qualité.' },
+                    { num: '01.03', title: 'Construction', desc: 'Propositions techniques complexes avec devis détaillés et délais stricts.' }
+                ],
+                en: [
+                    { num: '01.01', title: 'Consultants & Freelancers', desc: 'Working alone, limited time to draft convincing proposals.' },
+                    { num: '01.02', title: 'Agencies & SMBs', desc: 'High volume of submissions, need to standardize quality.' },
+                    { num: '01.03', title: 'Construction', desc: 'Complex technical proposals with detailed quotes and strict timelines.' }
+                ]
+            };
+
+            // ── Dynamic brand header ──
+            const dynamicBrand = document.getElementById('dynamicBrand');
+            function updateBrand() {
+                const t = translations[isEnglish ? 'en' : 'fr'];
+                const msg = t['brand'][currentSlide] || t['brand'][0];
+                dynamicBrand.style.opacity = '0';
+                setTimeout(() => {
+                    dynamicBrand.textContent = msg;
+                    dynamicBrand.style.opacity = '1';
+                }, 300);
+            }
+
+            // ── Translate page ──
+            function translatePage() {
+                const t = translations[isEnglish ? 'en' : 'fr'];
+                document.querySelectorAll('[class*="t-"]').forEach(el => {
+                    const classes = [...el.classList];
+                    const tClass = classes.find(c => c.startsWith('t-'));
+                    if (tClass) {
+                        const key = tClass.substring(2);
+                        if (t[key] && typeof t[key] === 'string') {
+                            el.innerHTML = t[key];
+                        }
+                    }
+                });
+                langToggle.textContent = isEnglish ? 'FR' : 'EN';
+                fsToggle.textContent = t['fs'];
+                updatePersonaDetail(currentPersona);
+                updateBrand();
+            }
+
+            // ── Persona carousel ──
+            function startPersonaCarousel() {
+                stopPersonaCarousel();
+                personaInterval = setInterval(() => {
+                    currentPersona = (currentPersona + 1) % 3;
+                    updatePersonaCarousel();
+                }, 3000);
+            }
+
+            function stopPersonaCarousel() {
+                if (personaInterval) { clearInterval(personaInterval); personaInterval = null; }
+            }
+
+            function updatePersonaCarousel() {
+                document.querySelectorAll('.persona-card').forEach((card, i) => {
+                    card.classList.toggle('active-persona', i === currentPersona);
+                });
+                document.querySelectorAll('.persona-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentPersona);
+                });
+                updatePersonaDetail(currentPersona);
+            }
+
+            function updatePersonaDetail(index) {
+                const lang = isEnglish ? 'en' : 'fr';
+                const data = personaData[lang][index];
+                const detail = document.getElementById('personaDetail');
+                if (!detail) return;
+                detail.querySelector('.detail-num').textContent = data.num;
+                detail.querySelector('.detail-title').textContent = data.title;
+                detail.querySelector('.detail-desc').textContent = data.desc;
+            }
+
+            // ── Problem Slide Animations ──
+            function animatePainScreen() {
+                const clock = document.getElementById('painClock');
+                const mStat1 = document.getElementById('mStat1');
+                const mStat2 = document.getElementById('mStat2');
+                const mStat3 = document.getElementById('mStat3');
+
+                let seconds = 0;
+                const target = 3587; // 00:59:47
+                const duration = 3000; // 3 seconds to reach target
+                const interval = 50; // update every 50ms
+                const totalSteps = duration / interval;
+                let step = 0;
+
+                // Reset states
+                clearInterval(painClockInterval);
+                if (mStat1) mStat1.classList.remove('visible');
+                if (mStat2) mStat2.classList.remove('visible');
+                if (mStat3) mStat3.classList.remove('visible');
+
+                // Update clock display
+                function updateClock() {
+                    const h = Math.floor(seconds / 3600);
+                    const m = Math.floor((seconds % 3600) / 60);
+                    const s = seconds % 60;
+                    clock.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                }
+
+                updateClock();
+
+                painClockInterval = setInterval(() => {
+                    step++;
+                    // Ease-out curve: fast start, slows down near the end
+                    const progress = 1 - Math.pow(1 - (step / totalSteps), 3);
+                    seconds = Math.floor(progress * target);
+
+                    // Reveal stats at key moments during the acceleration
+                    if (step > 15 && mStat1) mStat1.classList.add('visible');
+                    if (step > 35 && mStat2) mStat2.classList.add('visible');
+                    if (step > 50 && mStat3) mStat3.classList.add('visible');
+
+                    if (step >= totalSteps) {
+                        seconds = target;
+                        clearInterval(painClockInterval);
+                    }
+
+                    updateClock();
+                }, interval);
+            }
+
+            function stopPainClock() {
+                if (painClockInterval) { clearInterval(painClockInterval); painClockInterval = null; }
+            }
+
+            // ── Waveform ──
+            function initWaveform() {
+                const wf = document.getElementById('waveform');
+                wf.innerHTML = '';
+                for (let i = 0; i < 24; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'wave-bar';
+                    wf.appendChild(bar);
+                }
+            }
+
+            function animateWaveform(active) {
+                const bars = document.querySelectorAll('#waveform .wave-bar');
+                if (active) {
+                    waveformInterval = setInterval(() => {
+                        bars.forEach(bar => {
+                            const h = 8 + Math.random() * 38;
+                            bar.style.height = h + 'px';
+                            bar.style.opacity = (0.4 + (h / 46) * 0.6).toFixed(2);
+                        });
+                    }, 150);
+                } else {
+                    if (waveformInterval) { clearInterval(waveformInterval); waveformInterval = null; }
+                    bars.forEach(bar => { bar.style.height = '8px'; bar.style.opacity = '0.3'; });
+                }
+            }
+
+            // ── Transcription typewriter ──
+            function startTranscription() {
+                const el = document.getElementById('transcription');
+                const t = translations[isEnglish ? 'en' : 'fr'];
+                const text = t['transcription'];
+                const words = text.split(' ');
+                el.innerHTML = '';
+                el.classList.add('typing');
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i < words.length) {
+                        el.innerHTML += (i > 0 ? ' ' : '') + words[i];
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        setTimeout(() => el.classList.remove('typing'), 800);
+                    }
+                }, 180);
+            }
+
+            // ── Processing animation ──
+            function startProcessingAnimation() {
+                const t = translations[isEnglish ? 'en' : 'fr'];
+                const steps = t['processing-steps'];
+                const container = document.getElementById('processingSteps');
+                container.innerHTML = '';
+                steps.forEach((text, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'processing-step';
+                    el.innerHTML = `<span class="step-check">&#10003;</span> ${text}`;
+                    container.appendChild(el);
+                    setTimeout(() => el.classList.add('visible'), 500 + i * 650);
+                });
+            }
+
+            // ── Particle celebration ──
+            let particleAnimId = null;
+            function startParticles() {
+                stopParticles();
+                const canvas = document.getElementById('finaleCanvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                const W = canvas.offsetWidth;
+                const H = canvas.offsetHeight;
+
+                const particles = [];
+                for (let i = 0; i < 60; i++) {
+                    particles.push({
+                        x: W * 0.3 + Math.random() * W * 0.4,
+                        y: H + Math.random() * 40,
+                        vx: (Math.random() - 0.5) * 1.5,
+                        vy: -(1.5 + Math.random() * 3),
+                        size: 2 + Math.random() * 4,
+                        opacity: 0.3 + Math.random() * 0.7,
+                        hue: Math.random() > 0.5 ? 220 : 260, // blue or purple
+                        life: 0,
+                        maxLife: 120 + Math.random() * 100
+                    });
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, W, H);
+                    let alive = false;
+                    particles.forEach(p => {
+                        p.life++;
+                        if (p.life > p.maxLife) return;
+                        alive = true;
+                        p.x += p.vx + Math.sin(p.life * 0.03) * 0.5;
+                        p.y += p.vy;
+                        p.vy *= 0.995;
+                        const fade = 1 - (p.life / p.maxLife);
+                        const alpha = p.opacity * fade;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size * fade, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${alpha})`;
+                        ctx.fill();
+                        // Glow
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size * fade * 3, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${alpha * 0.15})`;
+                        ctx.fill();
+                    });
+                    if (alive) {
+                        particleAnimId = requestAnimationFrame(draw);
+                    }
+                }
+                // Stagger particle spawns
+                particles.forEach((p, i) => {
+                    p.y = H + 20;
+                    p.life = -i * 2; // negative = delayed start
+                });
+                draw();
+            }
+
+            function stopParticles() {
+                if (particleAnimId) { cancelAnimationFrame(particleAnimId); particleAnimId = null; }
+                const canvas = document.getElementById('finaleCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            // ── Solution phases ──
+            function setSolutionPhase(phase) {
+                solutionPhases.forEach(p => slideSolution.classList.remove('phase-' + p));
+                if (phase >= 0 && phase < solutionPhases.length) {
+                    slideSolution.classList.add('phase-' + solutionPhases[phase]);
+                }
+                solutionPhase = phase;
+
+                // Reset
+                animateWaveform(false);
+                stopParticles();
+
+                switch (solutionPhases[phase]) {
+                    case 'voice':
+                        animateWaveform(true);
+                        setTimeout(startTranscription, 500);
+                        break;
+                    case 'processing':
+                        startProcessingAnimation();
+                        break;
+                    case 'finale':
+                        setTimeout(startParticles, 400);
+                        break;
+                }
+            }
+
+            // ── Mobile phase system ──
+            // On mobile (<=768px), slides 0 and 1 have sub-phases: 'title' then 'content'
+            let mobilePhase = 'title'; // 'title' or 'content'
+            function isMobile() { return window.innerWidth <= 768; }
+
+            function setMobilePhase(phase) {
+                mobilePhase = phase;
+                const activeSlide = document.querySelectorAll('.slide')[currentSlide];
+                activeSlide.classList.remove('mobile-phase-title', 'mobile-phase-content');
+                activeSlide.classList.add('mobile-phase-' + phase);
+            }
+
+            // ── Navigation ──
+            function goNext() {
+                // Mobile sub-phases for slides 0 and 1 only (slide 2 has its own phase system)
+                if (isMobile() && currentSlide < 2 && mobilePhase === 'title') {
+                    setMobilePhase('content');
+                    updateNavState();
+                    return;
+                }
+
+                // Mobile: slide 2 title phase → show content then start solution phases
+                if (isMobile() && currentSlide === 2 && mobilePhase === 'title') {
+                    setMobilePhase('content');
+                    setSolutionPhase(0);
+                    updateNavState();
+                    return;
+                }
+
+                if (currentSlide === 2) {
+                    if (solutionPhase < solutionPhases.length - 1) {
+                        setSolutionPhase(solutionPhase + 1);
+                        updateNavState();
+                        return;
+                    }
+                    return;
+                }
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlider();
+                    // On desktop, start solution phases immediately
+                    if (currentSlide === 2 && !isMobile()) {
+                        setSolutionPhase(0);
+                    }
+                }
+            }
+
+            function goPrev() {
+                // Mobile sub-phases: go back to title first (slides 0 and 1)
+                if (isMobile() && currentSlide < 2 && mobilePhase === 'content') {
+                    setMobilePhase('title');
+                    updateNavState();
+                    return;
+                }
+
+                // Mobile: slide 2, at phase 0 content → go back to title
+                if (isMobile() && currentSlide === 2 && solutionPhase <= 0 && mobilePhase === 'content') {
+                    setMobilePhase('title');
+                    solutionPhase = -1;
+                    solutionPhases.forEach(p => slideSolution.classList.remove('phase-' + p));
+                    animateWaveform(false);
+                    updateNavState();
+                    return;
+                }
+
+                if (currentSlide === 2 && solutionPhase > 0) {
+                    setSolutionPhase(solutionPhase - 1);
+                    updateNavState();
+                    return;
+                }
+                if (currentSlide > 0) {
+                    if (currentSlide === 2) {
+                        solutionPhase = -1;
+                        solutionPhases.forEach(p => slideSolution.classList.remove('phase-' + p));
+                        animateWaveform(false);
+                    }
+                    currentSlide--;
+                    updateSlider();
+                }
+            }
+
+            // ── Video management ──
+            const allVideos = document.querySelectorAll('.iphone-video');
+
+            function manageVideos() {
+                const activeSlide = document.querySelectorAll('.slide')[currentSlide];
+                allVideos.forEach(v => {
+                    if (!activeSlide || !activeSlide.contains(v)) {
+                        v.pause();
+                    }
+                });
+                const vid = activeSlide ? activeSlide.querySelector('.iphone-video') : null;
+                if (vid) {
+                    vid.currentTime = 0;
+                    vid.play().catch(() => {});
+                }
+            }
+
+            // Ensure videos play even when autoplay doesn't re-trigger (cached page load)
+            allVideos.forEach(v => {
+                v.addEventListener('canplay', () => {
+                    if (v.paused && v.autoplay) v.play().catch(() => {});
+                });
+            });
+
+            // window.load fires after resources are ready (unlike DOMContentLoaded)
+            window.addEventListener('load', () => {
+                allVideos.forEach(v => {
+                    if (v.paused) v.play().catch(() => {});
+                });
+                manageVideos();
+            });
+
+            // Handle page restored from bfcache
+            window.addEventListener('pageshow', (e) => {
+                if (e.persisted) {
+                    allVideos.forEach(v => v.play().catch(() => {}));
+                    manageVideos();
+                }
+            });
+
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+                document.querySelectorAll('.slide').forEach((s, i) => {
+                    s.classList.toggle('active', i === currentSlide);
+                    s.classList.remove('mobile-phase-title', 'mobile-phase-content');
+                });
+
+                // On mobile, new slides start with title phase
+                if (isMobile() && currentSlide < 3) {
+                    mobilePhase = 'title';
+                    setMobilePhase('title');
+                }
+
+                // Update dynamic brand header
+                updateBrand();
+
+                // Slide-specific logic
+                stopPainClock();
+                stopPersonaCarousel();
+                manageVideos();
+
+                if (currentSlide === 0) {
+                    currentPersona = 0;
+                    updatePersonaCarousel();
+                    startPersonaCarousel();
+                } else if (currentSlide === 1) {
+                    animatePainScreen();
+                }
+
+                updateNavState();
+            }
+
+            function updateNavState() {
+                // On mobile, prev is only disabled at slide 0 title phase
+                if (isMobile()) {
+                    prevBtn.disabled = (currentSlide === 0 && mobilePhase === 'title');
+                } else {
+                    prevBtn.disabled = (currentSlide === 0);
+                }
+                nextBtn.disabled = (currentSlide === 2 && solutionPhase >= solutionPhases.length - 1);
+
+                let progress;
+                if (currentSlide < 2) {
+                    progress = ((currentSlide + 1) / totalSlides) * 100;
+                } else {
+                    const base = (2 / totalSlides) * 100;
+                    const phaseProgress = ((solutionPhase + 1) / solutionPhases.length) * (100 / totalSlides);
+                    progress = base + phaseProgress;
+                }
+                progressFill.style.width = progress + '%';
+            }
+
+            // ── Keyboard navigation ──
+            document.addEventListener('keydown', (e) => {
+                if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
+                    e.preventDefault(); goNext();
+                } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+                    e.preventDefault(); goPrev();
+                } else if (e.key === 'f' || e.key === 'F') {
+                    toggleFullscreen();
+                }
+            });
+
+            // ── Mouse wheel (debounced) ──
+            let isScrolling = false;
+            document.addEventListener('wheel', (e) => {
+                if (window.innerWidth <= 768) return;
+                if (isScrolling) return;
+                isScrolling = true;
+                if (e.deltaY > 50) goNext();
+                else if (e.deltaY < -50) goPrev();
+                setTimeout(() => { isScrolling = false; }, 900);
+            });
+
+            // ── Button clicks ──
+            prevBtn.onclick = goPrev;
+            nextBtn.onclick = goNext;
+
+            // ── Touch swipe (mobile) ──
+            let touchStartX = 0;
+            let touchStartY = 0;
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+            document.addEventListener('touchend', (e) => {
+                const dx = e.changedTouches[0].screenX - touchStartX;
+                const dy = e.changedTouches[0].screenY - touchStartY;
+                if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+                if (dx < 0) goNext();
+                else goPrev();
+            }, { passive: true });
+
+            // ── Language toggle ──
+            langToggle.addEventListener('click', () => {
+                isEnglish = !isEnglish;
+                translatePage();
+            });
+
+            // ── Fullscreen toggle ──
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+            fsToggle.addEventListener('click', toggleFullscreen);
+
+            // ── Custom cursor ──
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    customCursor.style.left = e.clientX + 'px';
+                    customCursor.style.top = e.clientY + 'px';
+                });
+                document.querySelectorAll('button, a, .nav-btn, .lang-toggle, .fs-toggle').forEach(el => {
+                    el.addEventListener('mouseenter', () => customCursor.classList.add('hover'));
+                    el.addEventListener('mouseleave', () => customCursor.classList.remove('hover'));
+                });
+            }
+
+            // ── Init ──
+            if (isMobile()) {
+                setMobilePhase('title');
+            }
+            initWaveform();
+            updatePersonaCarousel();
+            updateNavState();
+            startPersonaCarousel();
+        });
+    </script>
+</body>
+
+</html>

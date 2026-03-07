@@ -67,7 +67,7 @@
 
             /* iPhone dimensions */
             --iphone-width: min(26vw, 42vh, 320px);
-            --iphone-height: calc(var(--iphone-width) * 2.164);
+            --iphone-height: calc(var(--iphone-width) * 2.167);
             --iphone-radius: calc(var(--iphone-width) * 0.165);
         }
 
@@ -202,7 +202,7 @@
         }
 
         .glow-red {
-            background: radial-gradient(circle, rgba(255, 69, 58, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 105, 97, 0.2) 0%, transparent 70%);
         }
 
         .slide.active .ambient-glow {
@@ -422,6 +422,10 @@
             animation-play-state: paused;
         }
 
+        .slide:not(.active) .ticker-track {
+            animation-play-state: paused;
+        }
+
         .ticker-item {
             font-size: 0.85rem;
             font-weight: 500;
@@ -569,7 +573,7 @@
             box-shadow:
                 0 0 0 1px rgba(255, 255, 255, 0.05),
                 0 25px 80px rgba(0, 0, 0, 0.6),
-                0 0 60px rgba(255, 69, 58, 0.2);
+                0 0 60px rgba(255, 105, 97, 0.2);
         }
 
         /* Pain overlay (over video) */
@@ -661,10 +665,9 @@
 
         .pain-clock-time {
             font-size: clamp(1.4rem, calc(var(--iphone-width) * 0.14), 2.2rem);
-            font-weight: 300;
+            font-weight: 400;
             font-variant-numeric: tabular-nums;
             color: var(--danger-red);
-            opacity: 0.9;
         }
 
         /* Floating stats */
@@ -1125,6 +1128,7 @@
             font-weight: 900;
             letter-spacing: -0.05em;
             line-height: 1;
+            white-space: nowrap;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1421,7 +1425,7 @@
         /* ── Copyright Footer ── */
         .copyright-footer {
             position: fixed;
-            bottom: 0;
+            bottom: 3px;
             left: 0;
             right: 0;
             text-align: center;
@@ -1542,7 +1546,7 @@
                             <source src="assets/videos/cible_montage.mp4" type="video/mp4">
                         </video>
                         <div class="persona-carousel" id="personaCarousel">
-                            <div class="persona-card">
+                            <div class="persona-card active-persona">
                                 <div class="persona-label t-m1-title">Consultants & Freelances</div>
                                 <div class="persona-desc t-m1-desc">Travaillent seuls, temps limité pour rédiger des
                                     propositions convaincantes.</div>
@@ -1841,7 +1845,7 @@
                     'm5-desc': 'Contrats perdus faute de pouvoir soumettre à temps face à la compétition.',
                     'm6-title': "Coût de l'Inaction",
                     'm6-desc': "Revenu d'une proposition jamais envoyée. La friction bloque la vente.",
-                    'h1-3': 'Générateur<br>Intelligent<br>De Propos.',
+                    'h1-3': 'Générateur<br>Intelligent<br>De Propositions.',
                     'tap-hint': 'Appuyez pour dicter',
                     'voice-status': 'Écoute en cours...',
                     'processing-text': 'Génération en cours...',

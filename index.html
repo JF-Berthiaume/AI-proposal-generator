@@ -147,7 +147,7 @@
             padding: 0.35rem 0.75rem;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.2s;
+            transition: color 0.2s, border-color 0.2s;
             border-radius: var(--radius-sm);
         }
 
@@ -1414,6 +1414,220 @@
             }
         }
 
+        /* ── Cinematic Opening ── */
+        .cinematic-curtain {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-dark);
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+        }
+
+        .cinematic-curtain.lifted {
+            opacity: 0;
+        }
+
+        /* ── Kinetic Typography ── */
+        .kinetic-line {
+            display: block;
+            opacity: 0;
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+        }
+
+        .kinetic-line.from-left {
+            transform: translateX(-40px);
+        }
+
+        .kinetic-line.from-right {
+            transform: translateX(40px);
+        }
+
+        .kinetic-line.from-top {
+            transform: translateY(-30px);
+        }
+
+        .slide.active .kinetic-line.animate-in {
+            opacity: 1;
+            transform: translateX(0) translateY(0);
+        }
+
+        /* Stat emphasis animations */
+        @keyframes stat-pulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(0) scale(1.15); }
+        }
+
+        @keyframes stat-shake {
+            0%, 100% { transform: translateY(0); }
+            20% { transform: translateY(0) translateX(-3px); }
+            40% { transform: translateY(0) translateX(3px); }
+            60% { transform: translateY(0) translateX(-2px); }
+            80% { transform: translateY(0) translateX(2px); }
+        }
+
+        .slide-probleme.active .stat-left-bottom .stat-number {
+            animation: stat-pulse 0.6s var(--ease-out-expo) 1.2s both;
+        }
+
+        .slide-probleme.active .stat-right-center .stat-number {
+            animation: stat-shake 0.4s ease 1.6s both;
+        }
+
+        /* ── Glow Pulse (Slide 2) ── */
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .slide-probleme.active .glow-red {
+            animation: glow-pulse 2s ease-in-out 1s infinite;
+        }
+
+        /* ── Dramatic Blackout before Reveal ── */
+        .slide-solution.phase-blackout .iphone-mockup,
+        .slide-solution.phase-blackout .stage-text,
+        .slide-solution.phase-blackout .slide-label {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .slide-solution.phase-complete .iphone-mockup,
+        .slide-solution.phase-complete .stage-text,
+        .slide-solution.phase-complete .slide-label {
+            transition: opacity 0.6s ease;
+        }
+
+        /* ── Dramatic Pause — disable nav button during stats ── */
+        .nav-btn.paused {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ── Flash Reveal ── */
+        .reveal-flash {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: white;
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .reveal-flash.flash {
+            animation: flash-burst 0.5s ease-out forwards;
+        }
+
+        @keyframes flash-burst {
+            0% { opacity: 0; }
+            15% { opacity: 0.35; }
+            100% { opacity: 0; }
+        }
+
+        /* ── Elastic Bounce for Finale Time ── */
+        @keyframes elastic-in {
+            0% { opacity: 0; transform: scale(0.5); }
+            60% { opacity: 1; transform: scale(1.08); }
+            80% { transform: scale(0.97); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-solution.phase-reveal .finale-time {
+            animation: elastic-in 0.8s var(--ease-out-expo) forwards;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        /* Strikethrough animation */
+        .finale-old {
+            text-decoration: none;
+        }
+
+        .slide-solution.phase-reveal .finale-old {
+            background-image: linear-gradient(var(--danger-red), var(--danger-red));
+            background-size: 0% 3px;
+            background-position: left center;
+            background-repeat: no-repeat;
+            animation: strike-draw 0.6s ease 1s forwards;
+        }
+
+        @keyframes strike-draw {
+            to { background-size: 100% 3px; }
+        }
+
+        /* ── Branding + CTA ── */
+        .finale-brand {
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .finale-brand.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .finale-cta {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            border: 2px solid var(--accent);
+            border-radius: var(--radius-md);
+            color: var(--accent);
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            cursor: pointer;
+            background: transparent;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), background 0.2s, color 0.2s;
+            pointer-events: auto;
+        }
+
+        .finale-cta.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .finale-cta:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ── Audio Toggle ── */
+        .audio-toggle {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-secondary);
+            font-family: var(--font-main);
+            font-size: 0.75rem;
+            padding: 0.35rem 0.5rem;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .audio-toggle:hover {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .audio-toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
         /* ── Focus States ── */
         .nav-btn:focus-visible,
         .lang-toggle:focus-visible,
@@ -1466,6 +1680,12 @@
 </head>
 
 <body>
+    <!-- Cinematic Curtain -->
+    <div class="cinematic-curtain" id="cinematicCurtain" aria-hidden="true"></div>
+
+    <!-- Reveal Flash -->
+    <div class="reveal-flash" id="revealFlash" aria-hidden="true"></div>
+
     <!-- Custom Cursor -->
     <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
 
@@ -1473,6 +1693,10 @@
     <header class="top-header">
         <div class="brand" id="dynamicBrand">Qui sont vos clients?</div>
         <div class="header-controls">
+            <button class="audio-toggle" id="audioToggle" aria-label="Activer/Désactiver le son" title="Son">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="audio-icon-on"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="audio-icon-off" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
             <button class="lang-toggle" id="langToggle" aria-label="Changer de langue">EN</button>
             <button class="fs-toggle" id="fsToggle" aria-label="Mode plein écran">PLEIN ÉCRAN</button>
         </div>
@@ -1491,7 +1715,7 @@
                 </div>
 
                 <div class="stage-text stage-text-left">
-                    <h1 class="t-h1-1">Les pro.<br>Qui vendent<br>Des services.</h1>
+                    <h1 class="t-h1-1"><span class="kinetic-line from-left">Les pro.</span><br><span class="kinetic-line from-right">Qui vendent</span><br><span class="kinetic-line from-top">Des services.</span></h1>
                     <div class="ticker-wrapper">
                         <div class="ticker-track" id="tickerTrack">
                             <span class="ticker-item">Consultants</span>
@@ -1775,6 +1999,10 @@
                         <div class="finale-vs t-finale-vs">au lieu de</div>
                         <div class="finale-old">1h+</div>
                         <div class="finale-tagline t-finale-tagline">L'humain décide. L'IA exécute.</div>
+                        <div class="finale-brand" id="finaleBrand">AI PROPOSAL GENERATOR</div>
+                        <div class="finale-cta" id="finaleCta">
+                            <span class="t-finale-cta">Récupérez votre temps →</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1814,6 +2042,7 @@
             let currentPersona = 0;
             let navLocked = false;
             let processingTimeouts = [];
+            let blackoutTimeouts = [];
 
             // ── Elements ──
             const slider = document.getElementById('slider');
@@ -1824,6 +2053,134 @@
             const langToggle = document.getElementById('langToggle');
             const fsToggle = document.getElementById('fsToggle');
             const customCursor = document.getElementById('customCursor');
+            const cinematicCurtain = document.getElementById('cinematicCurtain');
+            const revealFlash = document.getElementById('revealFlash');
+            const audioToggle = document.getElementById('audioToggle');
+            const finaleBrand = document.getElementById('finaleBrand');
+            const finaleCta = document.getElementById('finaleCta');
+
+            // ── Web Audio API — Sound Design ──
+            class PitchAudio {
+                constructor() {
+                    this.ctx = null;
+                    this.muted = false;
+                    this.initialized = false;
+                    // Respect prefers-reduced-motion
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        this.muted = true;
+                    }
+                }
+
+                init() {
+                    if (this.initialized) return;
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.initialized = true;
+                }
+
+                _tone(freq, duration, type = 'sine', volume = 0.15) {
+                    if (this.muted || !this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                }
+
+                whoosh(ascending = true) {
+                    if (this.muted || !this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.Q.value = 0.5;
+                    osc.type = 'sawtooth';
+                    const now = this.ctx.currentTime;
+                    if (ascending) {
+                        osc.frequency.setValueAtTime(200, now);
+                        osc.frequency.exponentialRampToValueAtTime(800, now + 0.6);
+                        filter.frequency.setValueAtTime(400, now);
+                        filter.frequency.exponentialRampToValueAtTime(2000, now + 0.6);
+                    } else {
+                        osc.frequency.setValueAtTime(600, now);
+                        osc.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+                        filter.frequency.setValueAtTime(1500, now);
+                        filter.frequency.exponentialRampToValueAtTime(300, now + 0.3);
+                    }
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (ascending ? 0.8 : 0.3));
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(now + (ascending ? 0.8 : 0.3));
+                }
+
+                tick() {
+                    this._tone(3500, 0.06, 'square', 0.05);
+                }
+
+                pop() {
+                    this._tone(1200, 0.1, 'sine', 0.12);
+                    setTimeout(() => this._tone(1800, 0.05, 'sine', 0.06), 30);
+                }
+
+                chime() {
+                    this._tone(880, 0.3, 'sine', 0.1);
+                    setTimeout(() => this._tone(1108, 0.25, 'sine', 0.08), 100);
+                }
+
+                reveal() {
+                    if (this.muted || !this.ctx) return;
+                    this.whoosh(true);
+                    // Triumphant major chord after whoosh
+                    setTimeout(() => {
+                        this._tone(523.25, 1.2, 'sine', 0.1);  // C5
+                        this._tone(659.25, 1.2, 'sine', 0.08); // E5
+                        this._tone(783.99, 1.2, 'sine', 0.06); // G5
+                    }, 400);
+                }
+
+                openingSequence() {
+                    if (this.muted || !this.ctx) return;
+                    this.whoosh(true);
+                    // 3 ascending tones
+                    setTimeout(() => this._tone(440, 0.3, 'sine', 0.08), 300);
+                    setTimeout(() => this._tone(554, 0.25, 'sine', 0.06), 500);
+                    setTimeout(() => this._tone(659, 0.4, 'sine', 0.07), 650);
+                }
+
+                toggleMute() {
+                    this.muted = !this.muted;
+                    return this.muted;
+                }
+            }
+
+            const pitchAudio = new PitchAudio();
+
+            // Audio toggle button
+            audioToggle.addEventListener('click', () => {
+                pitchAudio.init();
+                const muted = pitchAudio.toggleMute();
+                audioToggle.querySelector('.audio-icon-on').style.display = muted ? 'none' : '';
+                audioToggle.querySelector('.audio-icon-off').style.display = muted ? '' : 'none';
+                audioToggle.classList.toggle('muted', muted);
+            });
+
+            // Initialize audio on first user interaction
+            function initAudioOnce() {
+                pitchAudio.init();
+                document.removeEventListener('click', initAudioOnce);
+                document.removeEventListener('keydown', initAudioOnce);
+                document.removeEventListener('touchstart', initAudioOnce);
+            }
+            document.addEventListener('click', initAudioOnce);
+            document.addEventListener('keydown', initAudioOnce);
+            document.addEventListener('touchstart', initAudioOnce);
 
             // ── Translations ──
             const translations = {
@@ -1851,9 +2208,10 @@
                     'processing-text': 'Génération en cours...',
                     'complete-text': 'Proposition envoyée!',
                     'transcription': "Mon client veut une app mobile pour gérer ses rendez-vous, budget 25 000$, livraison en 8 semaines.",
-                    'processing-steps': ['Analyse du brief...', 'Construction de la portée...', 'Génération des livrables...', 'Structure de prix...', 'Mise en page...'],
+                    'processing-steps': ['Analyse du brief...', 'Génération de la proposition...', 'Mise en page & envoi...'],
                     'finale-vs': 'au lieu de',
                     'finale-tagline': "L'humain décide. L'IA exécute.",
+                    'finale-cta': 'Récupérez votre temps →',
                     'fs': 'PLEIN ÉCRAN',
                     'brand': [
                         'Qui sont vos clients?',
@@ -1885,9 +2243,10 @@
                     'processing-text': 'Generating...',
                     'complete-text': 'Proposal sent!',
                     'transcription': "My client wants a mobile app to manage appointments, budget $25,000, delivery in 8 weeks.",
-                    'processing-steps': ['Analyzing brief...', 'Building scope...', 'Generating deliverables...', 'Structuring pricing...', 'Formatting proposal...'],
+                    'processing-steps': ['Analyzing brief...', 'Generating proposal...', 'Formatting & sending...'],
                     'finale-vs': 'instead of',
                     'finale-tagline': 'Humans decide. AI executes.',
+                    'finale-cta': 'Reclaim your time →',
                     'fs': 'FULLSCREEN',
                     'brand': [
                         'Who are your clients?',
@@ -2016,18 +2375,23 @@
 
                 painClockInterval = setInterval(() => {
                     step++;
+                    // Tick sound every 5 steps (accelerating feel)
+                    if (step % 5 === 0) pitchAudio.tick();
                     // Ease-out curve: fast start, slows down near the end
                     const progress = 1 - Math.pow(1 - (step / totalSteps), 3);
                     seconds = Math.floor(progress * target);
 
                     // Reveal stats at key moments during the acceleration
-                    if (step > 15 && mStat1) mStat1.classList.add('visible');
-                    if (step > 35 && mStat2) mStat2.classList.add('visible');
-                    if (step > 50 && mStat3) mStat3.classList.add('visible');
+                    if (step === 16 && mStat1) { mStat1.classList.add('visible'); pitchAudio.pop(); }
+                    if (step === 36 && mStat2) { mStat2.classList.add('visible'); pitchAudio.pop(); }
+                    if (step === 51 && mStat3) { mStat3.classList.add('visible'); pitchAudio.pop(); }
 
                     if (step >= totalSteps) {
                         seconds = target;
                         clearInterval(painClockInterval);
+                        // Dramatic pause: disable next for 2s after all stats visible
+                        nextBtn.classList.add('paused');
+                        setTimeout(() => nextBtn.classList.remove('paused'), 2000);
                     }
 
                     updateClock();
@@ -2103,7 +2467,10 @@
                     el.className = 'processing-step';
                     el.innerHTML = `<span class="step-check">&#10003;</span> ${text}`;
                     container.appendChild(el);
-                    const tid = setTimeout(() => el.classList.add('visible'), 500 + i * 650);
+                    const tid = setTimeout(() => {
+                        el.classList.add('visible');
+                        pitchAudio.pop();
+                    }, 500 + i * 500);
                     processingTimeouts.push(tid);
                 });
             }
@@ -2191,16 +2558,42 @@
                 animateWaveform(false);
                 stopParticles();
                 clearProcessingTimeouts();
+                blackoutTimeouts.forEach(id => clearTimeout(id));
+                blackoutTimeouts = [];
+                slideSolution.classList.remove('phase-blackout');
+                finaleBrand.classList.remove('visible');
+                finaleCta.classList.remove('visible');
 
                 switch (solutionPhases[phase]) {
                     case 'voice':
                         animateWaveform(true);
                         setTimeout(startTranscription, 500);
+                        pitchAudio.pop();
                         break;
                     case 'processing':
                         startProcessingAnimation();
                         break;
+                    case 'complete':
+                        pitchAudio.chime();
+                        // Dramatic pause: blackout before reveal after 1.5s
+                        blackoutTimeouts.push(setTimeout(() => {
+                            slideSolution.classList.add('phase-blackout');
+                        }, 1500));
+                        // Auto-advance to reveal after blackout
+                        blackoutTimeouts.push(setTimeout(() => {
+                            slideSolution.classList.remove('phase-blackout');
+                            setSolutionPhase(4); // reveal
+                            updateNavState();
+                        }, 2800));
+                        break;
                     case 'reveal':
+                        // Flash burst
+                        revealFlash.classList.add('flash');
+                        setTimeout(() => revealFlash.classList.remove('flash'), 500);
+
+                        // Reveal sound
+                        pitchAudio.reveal();
+
                         // Play the cinematic reveal video
                         const revealVid = document.querySelector('.finale-video');
                         if (revealVid) {
@@ -2208,6 +2601,28 @@
                             revealVid.play().catch(() => {});
                         }
                         setTimeout(startParticles, 800);
+
+                        // Elastic bounce on finale-time
+                        const finaleTime = document.getElementById('finaleTime');
+                        if (finaleTime) {
+                            finaleTime.style.animation = 'elastic-in 0.8s var(--ease-out-expo) forwards';
+                        }
+
+                        // Animated strikethrough on 1h+
+                        const finaleOld = document.querySelector('.finale-old');
+                        if (finaleOld) {
+                            finaleOld.style.animation = 'strike-draw 0.6s ease-out 0.5s forwards';
+                        }
+
+                        // Branding reveal after 2s
+                        setTimeout(() => {
+                            finaleBrand.classList.add('visible');
+                        }, 2000);
+
+                        // CTA reveal after 3s
+                        setTimeout(() => {
+                            finaleCta.classList.add('visible');
+                        }, 3000);
                         break;
                 }
             }
@@ -2355,10 +2770,19 @@
                 // Update dynamic brand header
                 updateBrand();
 
+                // Slide transition sound
+                pitchAudio.whoosh(false);
+
                 // Slide-specific logic
                 stopPainClock();
                 stopPersonaCarousel();
                 manageVideos();
+
+                // Reset finale brand/CTA visibility when leaving slide 2
+                if (currentSlide !== 2) {
+                    finaleBrand.classList.remove('visible');
+                    finaleCta.classList.remove('visible');
+                }
 
                 if (currentSlide === 0) {
                     currentPersona = 0;
@@ -2474,6 +2898,23 @@
                 });
             }
 
+            // ── Cinematic opening ──
+            function cinematicOpen() {
+                // Animate kinetic lines on slide 1
+                setTimeout(() => {
+                    document.querySelectorAll('#slide-cible .kinetic-line').forEach(line => {
+                        line.classList.add('animate-in');
+                    });
+                }, 1800);
+
+                // Lift curtain after 1.5s
+                setTimeout(() => {
+                    cinematicCurtain.classList.add('lifted');
+                    pitchAudio.init();
+                    pitchAudio.openingSequence();
+                }, 1500);
+            }
+
             // ── Init ──
             if (isMobile()) {
                 setMobilePhase('title');
@@ -2482,6 +2923,7 @@
             updatePersonaCarousel();
             updateNavState();
             startPersonaCarousel();
+            cinematicOpen();
         });
     </script>
 

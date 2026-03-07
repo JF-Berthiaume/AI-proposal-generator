@@ -128,6 +128,7 @@
             letter-spacing: 0.08em;
             color: var(--text-primary);
             transition: opacity 0.4s ease;
+            cursor: pointer;
         }
 
         .header-controls {
@@ -2398,6 +2399,12 @@
 
             // ── Dynamic brand header ──
             const dynamicBrand = document.getElementById('dynamicBrand');
+            dynamicBrand.addEventListener('click', () => {
+                if (currentSlide !== 0) {
+                    currentSlide = 0;
+                    updateSlider();
+                }
+            });
             function updateBrand() {
                 const t = translations[isEnglish ? 'en' : 'fr'];
                 const msg = t['brand'][currentSlide] || t['brand'][0];

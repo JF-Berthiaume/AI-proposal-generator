@@ -1162,11 +1162,41 @@
             font-size: clamp(2rem, 4vw, 4.5rem);
             font-weight: 900;
             color: var(--danger-red);
-            text-decoration: line-through;
-            text-decoration-thickness: 3px;
+            position: relative;
+            display: inline-block;
             opacity: 0;
             transform: translateY(15px);
             transition: opacity 0.6s var(--ease-out-expo) 0.8s, transform 0.6s var(--ease-out-expo) 0.8s;
+        }
+
+        .finale-old .x-mark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            pointer-events: none;
+        }
+
+        .finale-old .x-mark line {
+            stroke: var(--danger-red);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+
+        .slide-solution.phase-reveal .finale-old .x-mark .x1 {
+            animation: draw-x 0.4s ease-out 1s forwards;
+        }
+
+        .slide-solution.phase-reveal .finale-old .x-mark .x2 {
+            animation: draw-x 0.4s ease-out 1.2s forwards;
+        }
+
+        @keyframes draw-x {
+            to { stroke-dashoffset: 0; }
         }
 
         .slide-solution.phase-reveal .finale-old {
@@ -1553,22 +1583,6 @@
             transform: scale(0.5);
         }
 
-        /* Strikethrough animation */
-        .finale-old {
-            text-decoration: none;
-        }
-
-        .slide-solution.phase-reveal .finale-old {
-            background-image: linear-gradient(var(--danger-red), var(--danger-red));
-            background-size: 0% 3px;
-            background-position: left center;
-            background-repeat: no-repeat;
-            animation: strike-draw 0.6s ease 1s forwards;
-        }
-
-        @keyframes strike-draw {
-            to { background-size: 100% 3px; }
-        }
 
         /* ── Branding + CTA ── */
         .finale-brand {
@@ -2011,7 +2025,7 @@
                     <div class="finale-content">
                         <div class="finale-time" id="finaleTime">30 sec.</div>
                         <div class="finale-vs t-finale-vs">au lieu de</div>
-                        <div class="finale-old">1h+</div>
+                        <div class="finale-old">1h+<svg class="x-mark" viewBox="0 0 100 100" aria-hidden="true"><line class="x1" x1="15" y1="15" x2="85" y2="85"/><line class="x2" x1="85" y1="15" x2="15" y2="85"/></svg></div>
                         <div class="finale-tagline t-finale-tagline">L'humain décide. L'IA exécute.</div>
                         <div class="finale-brand" id="finaleBrand">AI PROPOSAL GENERATOR</div>
                         <div class="finale-cta" id="finaleCta">
@@ -2620,12 +2634,6 @@
                         const finaleTime = document.getElementById('finaleTime');
                         if (finaleTime) {
                             finaleTime.style.animation = 'elastic-in 0.8s var(--ease-out-expo) forwards';
-                        }
-
-                        // Animated strikethrough on 1h+
-                        const finaleOld = document.querySelector('.finale-old');
-                        if (finaleOld) {
-                            finaleOld.style.animation = 'strike-draw 0.6s ease-out 0.5s forwards';
                         }
 
                         // Branding reveal after 2s

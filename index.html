@@ -824,10 +824,61 @@
         }
 
         /* Hide title during reveal */
-        .slide-solution.phase-reveal .stage-text-left {
+        .slide-solution.phase-reveal .stage-text-left,
+        .slide-solution.phase-reveal .stage-text-right {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+        }
+
+        /* ── Tech Stack (Slide 3 right) ── */
+        .tech-stack {
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tech-badge {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: var(--accent-gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+        }
+
+        .tech-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .tech-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tech-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
         /* Solution screen content switching */
@@ -2024,6 +2075,35 @@
                     </div>
                 </div>
 
+                <div class="stage-text stage-text-right">
+                    <div class="tech-stack">
+                        <div class="detail-num">03.00</div>
+                        <div class="detail-title t-stack-title">Stack Technique</div>
+                        <div class="tech-list">
+                            <div class="tech-item">
+                                <span class="tech-badge">RoR</span>
+                                <div class="tech-info"><span class="tech-name">Ruby on Rails</span><span class="tech-role t-tech-1">Backend & API</span></div>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-badge">JS</span>
+                                <div class="tech-info"><span class="tech-name">Stimulus JS</span><span class="tech-role t-tech-2">Interactivité frontend</span></div>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-badge">AI</span>
+                                <div class="tech-info"><span class="tech-name">AI Agent</span><span class="tech-role t-tech-3">Génération de propositions</span></div>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-badge">PG</span>
+                                <div class="tech-info"><span class="tech-name">PostgreSQL</span><span class="tech-role t-tech-4">Base de données</span></div>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-badge">&#9729;</span>
+                                <div class="tech-info"><span class="tech-name">Heroku</span><span class="tech-role t-tech-5">Déploiement cloud</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Cinematic Reveal -->
                 <div class="finale-overlay" id="finaleOverlay">
                     <video class="finale-video" muted playsinline preload="auto">
@@ -2249,6 +2329,12 @@
                     'finale-vs': 'au lieu de',
                     'finale-tagline': "L'humain décide. L'IA exécute.",
                     'finale-cta': 'Récupérez votre temps →',
+                    'stack-title': 'Stack Technique',
+                    'tech-1': 'Backend & API',
+                    'tech-2': 'Interactivité frontend',
+                    'tech-3': 'Génération de propositions',
+                    'tech-4': 'Base de données',
+                    'tech-5': 'Déploiement cloud',
                     'fs': 'PLEIN ÉCRAN',
                     'brand': [
                         'Qui sont vos clients?',
@@ -2284,6 +2370,12 @@
                     'finale-vs': 'instead of',
                     'finale-tagline': 'Humans decide. AI executes.',
                     'finale-cta': 'Reclaim your time →',
+                    'stack-title': 'Tech Stack',
+                    'tech-1': 'Backend & API',
+                    'tech-2': 'Frontend interactivity',
+                    'tech-3': 'Proposal generation',
+                    'tech-4': 'Database',
+                    'tech-5': 'Cloud deployment',
                     'fs': 'FULLSCREEN',
                     'brand': [
                         'Who are your clients?',

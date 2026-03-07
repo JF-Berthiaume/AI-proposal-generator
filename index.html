@@ -1301,6 +1301,18 @@
                 display: none;
             }
 
+            /* Slide label: top-left, avoid phone overlap */
+            .slide-label {
+                top: 5rem;
+                left: 1rem;
+            }
+
+            /* Hide label when phone is visible (content phase) */
+            .slide.mobile-phase-content .slide-label {
+                opacity: 0 !important;
+                pointer-events: none;
+            }
+
             /* On mobile, title and content are separate full-screen views */
             /* JS adds .mobile-phase-title or .mobile-phase-content to each slide */
 

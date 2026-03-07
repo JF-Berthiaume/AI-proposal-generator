@@ -1270,6 +1270,15 @@
             cursor: not-allowed;
         }
 
+        .nav-btn.hint-pulse {
+            animation: nav-hint 0.6s ease-in-out 3;
+        }
+
+        @keyframes nav-hint {
+            0%, 100% { background: transparent; }
+            50% { background: var(--accent); color: white; }
+        }
+
         .nav-btn svg {
             width: 16px;
             height: 16px;
@@ -2933,6 +2942,14 @@
                 setTimeout(() => {
                     cinematicCurtain.classList.add('lifted');
                 }, 1500);
+
+                // Hint: pulse next button after 3.5s so user knows to navigate
+                setTimeout(() => {
+                    nextBtn.classList.add('hint-pulse');
+                    nextBtn.addEventListener('animationend', () => {
+                        nextBtn.classList.remove('hint-pulse');
+                    }, { once: true });
+                }, 3500);
             }
 
             // ── Init ──

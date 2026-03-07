@@ -1,9 +1,24 @@
+<!--
+    ╔══════════════════════════════════════════════════════════════════╗
+    ║  Copyright (c) 2026 JF Berthiaume. All Rights Reserved.        ║
+    ║  Unauthorized copying, modification, or distribution of this   ║
+    ║  file, via any medium, is strictly prohibited.                 ║
+    ║  Proprietary and confidential.                                 ║
+    ║  Contact: jfberth@gmail.com                                    ║
+    ║  ID: AIPG-2026-JFB-7f3a9c2e                                   ║
+    ╚══════════════════════════════════════════════════════════════════╝
+-->
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="JF Berthiaume">
+    <meta name="copyright" content="© 2026 JF Berthiaume. All Rights Reserved.">
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>AI Proposal Generator — Live Demo</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -2353,6 +2368,98 @@
             updateNavState();
             startPersonaCarousel();
         });
+    </script>
+
+    <!-- Copyright Footer -->
+    <div id="copyrightFooter" style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        padding: 6px 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        color: rgba(134, 134, 139, 0.5);
+        letter-spacing: 0.5px;
+        z-index: 9999;
+        pointer-events: none;
+        user-select: none;
+    ">© 2026 JF Berthiaume. All Rights Reserved. Proprietary & Confidential.</div>
+
+    <!-- Watermark invisible -->
+    <!-- AIPG-SIGNATURE:7f3a9c2e-b4d1-4e8f-a5c3-9d6f2e1b8a7c:JFBerthiaume:2026 -->
+    <div style="display:none" data-owner="JF Berthiaume" data-license="All Rights Reserved" data-id="AIPG-2026-7f3a9c2e"></div>
+
+    <!-- Protection Script -->
+    <script>
+        // ── Copyright Protection ──
+        // © 2026 JF Berthiaume. All Rights Reserved.
+        (function() {
+            const _sig = 'AIPG-2026-JFB-7f3a9c2e-b4d1-4e8f-a5c3-9d6f2e1b8a7c';
+
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Disable text selection
+            document.addEventListener('selectstart', function(e) {
+                // Allow selection in input fields
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                e.preventDefault();
+                return false;
+            });
+
+            // Disable drag & drop on images and videos
+            document.addEventListener('dragstart', function(e) {
+                if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Disable keyboard shortcuts for viewing source / saving / dev tools
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+                // Ctrl+S (Save)
+                if (e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
+                // Ctrl+Shift+I (Dev Tools)
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
+                // F12 (Dev Tools)
+                if (e.key === 'F12') { e.preventDefault(); return false; }
+                // Ctrl+A (Select All)
+                if (e.ctrlKey && e.key === 'a') { e.preventDefault(); return false; }
+                // Ctrl+C (Copy) — except in inputs
+                if (e.ctrlKey && e.key === 'c' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault(); return false;
+                }
+            });
+
+            // Disable image/video download via overlay
+            document.querySelectorAll('video').forEach(function(video) {
+                video.setAttribute('controlsList', 'nodownload');
+                video.setAttribute('disablePictureInPicture', '');
+                video.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+            });
+
+            // Prevent saving images
+            document.querySelectorAll('img').forEach(function(img) {
+                img.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+                img.setAttribute('draggable', 'false');
+            });
+
+            // Add CSS protection
+            var style = document.createElement('style');
+            style.textContent = 'img, video { pointer-events: auto; -webkit-user-drag: none; user-drag: none; } body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }';
+            document.head.appendChild(style);
+        })();
     </script>
 </body>
 

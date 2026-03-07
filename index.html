@@ -19,24 +19,53 @@
     <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
     <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="color-scheme" content="dark">
     <title>AI Proposal Generator — Live Demo</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         :root {
+            /* Colors */
             --bg-dark: #0a0a0a;
             --bg-surface: #141414;
             --bg-card: #1a1a1a;
             --text-primary: #f5f5f7;
-            --text-secondary: #86868b;
-            --accent: #2563EB;
-            --accent-glow: rgba(37, 99, 235, 0.35);
-            --accent-gradient: linear-gradient(135deg, #2563EB, #7C3AED);
+            --text-secondary: #a1a1a6;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.35);
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #7C3AED);
             --success-green: #30D158;
-            --danger-red: #FF453A;
+            --danger-red: #FF6961;
+            --iphone-border: #2a2a2e;
+
+            /* Typography */
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+
+            /* Z-index scale */
+            --z-base: 1;
+            --z-phone: 10;
+            --z-phone-ui: 50;
+            --z-overlay: 100;
+            --z-nav: 200;
+            --z-cursor: 300;
+
+            /* Easing */
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+            /* iPhone dimensions */
             --iphone-width: min(26vw, 42vh, 320px);
             --iphone-height: calc(var(--iphone-width) * 2.164);
             --iphone-radius: calc(var(--iphone-width) * 0.165);
@@ -65,7 +94,7 @@
             border: 2px solid var(--text-primary);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: var(--z-cursor);
             transform: translate(-50%, -50%);
             transition: width 0.2s, height 0.2s, background 0.2s;
             mix-blend-mode: difference;
@@ -87,8 +116,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 2rem;
-            z-index: 200;
+            padding: 0 var(--space-xl);
+            z-index: var(--z-nav);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
@@ -119,7 +148,7 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: all 0.2s;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
         }
 
         .lang-toggle:hover,
@@ -165,7 +194,7 @@
             opacity: 0;
             transition: opacity 1.5s ease;
             pointer-events: none;
-            z-index: 0;
+            z-index: var(--z-base);
         }
 
         .glow-blue {
@@ -190,11 +219,11 @@
             gap: 0.6rem;
             opacity: 0;
             transform: translateY(-15px);
-            transition: all 0.6s var(--ease-out-expo) 0.2s;
-            z-index: 10;
+            transition: opacity 0.6s var(--ease-out-expo) 0.2s, transform 0.6s var(--ease-out-expo) 0.2s;
+            z-index: var(--z-phone);
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             padding: 0.5rem 1rem;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -228,7 +257,7 @@
             height: var(--iphone-height);
             background: #000;
             border-radius: var(--iphone-radius);
-            border: 3px solid #2a2a2e;
+            border: 3px solid var(--iphone-border);
             box-shadow:
                 inset 0 0 0 1px rgba(255, 255, 255, 0.08),
                 0 0 0 1px rgba(0, 0, 0, 0.8),
@@ -237,7 +266,7 @@
                 0 30px 80px rgba(0, 0, 0, 0.7),
                 0 0 60px var(--accent-glow);
             overflow: hidden;
-            z-index: 10;
+            z-index: var(--z-phone);
             flex-shrink: 0;
         }
 
@@ -252,7 +281,7 @@
             height: calc(var(--iphone-width) * 0.1);
             background: #000;
             border-radius: 0 0 18px 18px;
-            z-index: 50;
+            z-index: var(--z-phone-ui);
         }
 
         /* Home Indicator */
@@ -266,7 +295,7 @@
             height: 4px;
             background: rgba(255, 255, 255, 0.35);
             border-radius: 100px;
-            z-index: 50;
+            z-index: var(--z-phone-ui);
         }
 
         .iphone-status-bar {
@@ -283,7 +312,7 @@
             font-weight: 600;
             letter-spacing: 0.02em;
             color: var(--text-primary);
-            z-index: 40;
+            z-index: var(--z-phone-ui);
         }
 
         .status-icons {
@@ -312,7 +341,7 @@
         .slide-cible .iphone-mockup {
             opacity: 0;
             transform: scale(0.9);
-            transition: all 0.8s var(--ease-out-expo) 0.3s;
+            transition: opacity 0.8s var(--ease-out-expo) 0.3s, transform 0.8s var(--ease-out-expo) 0.3s;
         }
 
         .slide-cible.active .iphone-mockup {
@@ -322,10 +351,10 @@
 
         .stage-text {
             position: absolute;
-            z-index: 10;
+            z-index: var(--z-phone);
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.7s var(--ease-out-expo);
+            transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
         }
 
         .slide.active .stage-text {
@@ -361,7 +390,7 @@
         .stage-text h1 {
             font-size: clamp(2.5rem, 4vw, 5rem);
             font-weight: 900;
-            line-height: 0.92;
+            line-height: 0.95;
             letter-spacing: -0.04em;
             text-transform: uppercase;
         }
@@ -408,7 +437,7 @@
             content: '·';
             position: absolute;
             right: -0.1rem;
-            color: var(--accent-blue);
+            color: var(--accent);
             font-weight: 700;
             font-size: 1.2rem;
             top: 50%;
@@ -457,7 +486,7 @@
         .persona-label {
             font-size: 0.9rem;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 0.3rem;
             padding: 0 1.2rem;
             position: relative;
@@ -481,7 +510,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 6px;
-            z-index: 20;
+            z-index: var(--z-phone);
         }
 
         .persona-dot {
@@ -528,7 +557,7 @@
         .slide-probleme .iphone-mockup {
             opacity: 0;
             transform: scale(0.9);
-            transition: all 0.8s var(--ease-out-expo) 0.2s;
+            transition: opacity 0.8s var(--ease-out-expo) 0.2s, transform 0.8s var(--ease-out-expo) 0.2s;
         }
 
         .slide-probleme.active .iphone-mockup {
@@ -565,7 +594,7 @@
             color: var(--text-secondary);
             padding: 0.4rem 0.6rem;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             margin-bottom: 0.8rem;
             white-space: nowrap;
             overflow: hidden;
@@ -641,10 +670,10 @@
         /* Floating stats */
         .floating-stat {
             position: absolute;
-            z-index: 10;
+            z-index: var(--z-phone);
             opacity: 0;
             transform: translateY(25px);
-            transition: all 0.8s var(--ease-out-expo);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
         }
 
         .slide-probleme.active .floating-stat {
@@ -725,12 +754,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 15, 15, 0.85);
+            background: rgba(26, 26, 26, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            padding: 0.8rem var(--space-md);
             opacity: 0;
             transform: translateX(10px);
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -774,7 +803,7 @@
         .slide-solution .iphone-solution {
             opacity: 0;
             transform: scale(0.9);
-            transition: all 1s var(--ease-out-expo);
+            transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
         }
 
         .slide-solution.active .iphone-solution {
@@ -786,14 +815,14 @@
         .slide-solution.phase-reveal .iphone-solution {
             transform: scale(0.3);
             opacity: 0;
-            transition: all 0.8s var(--ease-out-expo);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
         }
 
         /* Hide title during reveal */
         .slide-solution.phase-reveal .stage-text-left {
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.6s var(--ease-out-expo);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
         }
 
         /* Solution screen content switching */
@@ -810,7 +839,7 @@
             padding: calc(var(--iphone-width) * 0.18) calc(var(--iphone-width) * 0.08) calc(var(--iphone-width) * 0.06);
             opacity: 0;
             transform: scale(0.96);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
             pointer-events: none;
         }
 
@@ -958,6 +987,7 @@
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            will-change: transform;
             margin-bottom: 0.8rem;
         }
 
@@ -984,7 +1014,7 @@
             margin-bottom: 0.45rem;
             opacity: 0;
             transform: translateX(-8px);
-            transition: all 0.4s var(--ease-out-expo);
+            transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1012,7 +1042,7 @@
             margin-bottom: 1rem;
             opacity: 0;
             transform: scale(0);
-            transition: all 0.5s var(--ease-out-expo);
+            transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
         }
 
         .slide-solution.phase-complete .checkmark-circle {
@@ -1023,7 +1053,7 @@
         .checkmark-circle svg {
             width: 28px;
             height: 28px;
-            fill: white;
+            fill: var(--text-primary);
         }
 
         .complete-text {
@@ -1041,7 +1071,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 100;
+            z-index: var(--z-nav);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1101,7 +1131,7 @@
             background-clip: text;
             opacity: 0;
             transform: scale(0.7);
-            transition: all 0.8s var(--ease-out-expo);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
         }
 
         .slide-solution.phase-reveal .finale-time {
@@ -1130,7 +1160,7 @@
             text-decoration-thickness: 3px;
             opacity: 0;
             transform: translateY(15px);
-            transition: all 0.6s var(--ease-out-expo) 0.8s;
+            transition: opacity 0.6s var(--ease-out-expo) 0.8s, transform 0.6s var(--ease-out-expo) 0.8s;
         }
 
         .slide-solution.phase-reveal .finale-old {
@@ -1167,10 +1197,10 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            z-index: 200;
+            z-index: var(--z-nav);
             background: var(--bg-surface);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
@@ -1218,7 +1248,7 @@
             width: 100%;
             height: 3px;
             background: rgba(255, 255, 255, 0.04);
-            z-index: 200;
+            z-index: var(--z-nav);
         }
 
         .progress-fill {
@@ -1379,21 +1409,70 @@
                 font-size: clamp(1.5rem, 8vw, 3rem) !important;
             }
         }
+
+        /* ── Focus States ── */
+        .nav-btn:focus-visible,
+        .lang-toggle:focus-visible,
+        .fs-toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* ── Copyright Footer ── */
+        .copyright-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 6px 0;
+            font-family: var(--font-main);
+            font-size: 10px;
+            color: rgba(161, 161, 166, 0.5);
+            letter-spacing: 0.5px;
+            z-index: var(--z-nav);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* ── Landscape Mobile ── */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .stage-text h1 {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .stage-text .subtitle {
+                font-size: clamp(0.75rem, 2.5vw, 1rem);
+            }
+
+            :root {
+                --iphone-width: min(30vh, 180px);
+            }
+        }
+
+        /* ── Reduced Motion ── */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Custom Cursor -->
-    <div class="custom-cursor" id="customCursor"></div>
+    <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
 
     <!-- Top Header -->
-    <div class="top-header">
+    <header class="top-header">
         <div class="brand" id="dynamicBrand">Qui sont vos clients?</div>
         <div class="header-controls">
-            <button class="lang-toggle" id="langToggle">EN</button>
-            <button class="fs-toggle" id="fsToggle">PLEIN ÉCRAN</button>
+            <button class="lang-toggle" id="langToggle" aria-label="Changer de langue">EN</button>
+            <button class="fs-toggle" id="fsToggle" aria-label="Mode plein écran">PLEIN ÉCRAN</button>
         </div>
-    </div>
+    </header>
 
     <!-- Presentation -->
     <div class="presentation-wrapper">
@@ -1700,13 +1779,13 @@
 
     <!-- Navigation -->
     <div class="nav-zone">
-        <button class="nav-btn" id="prevBtn" disabled>
-            <svg viewBox="0 0 24 24">
+        <button class="nav-btn" id="prevBtn" disabled aria-label="Slide précédente">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
         </button>
-        <button class="nav-btn" id="nextBtn">
-            <svg viewBox="0 0 24 24">
+        <button class="nav-btn" id="nextBtn" aria-label="Slide suivante">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
             </svg>
         </button>
@@ -1729,6 +1808,8 @@
             let waveformInterval = null;
             let personaInterval = null;
             let currentPersona = 0;
+            let navLocked = false;
+            let processingTimeouts = [];
 
             // ── Elements ──
             const slider = document.getElementById('slider');
@@ -2001,17 +2082,25 @@
             }
 
             // ── Processing animation ──
+            function clearProcessingTimeouts() {
+                processingTimeouts.forEach(id => clearTimeout(id));
+                processingTimeouts = [];
+            }
+
             function startProcessingAnimation() {
+                clearProcessingTimeouts();
                 const t = translations[isEnglish ? 'en' : 'fr'];
                 const steps = t['processing-steps'];
                 const container = document.getElementById('processingSteps');
+                if (!container) return;
                 container.innerHTML = '';
                 steps.forEach((text, i) => {
                     const el = document.createElement('div');
                     el.className = 'processing-step';
                     el.innerHTML = `<span class="step-check">&#10003;</span> ${text}`;
                     container.appendChild(el);
-                    setTimeout(() => el.classList.add('visible'), 500 + i * 650);
+                    const tid = setTimeout(() => el.classList.add('visible'), 500 + i * 650);
+                    processingTimeouts.push(tid);
                 });
             }
 
@@ -2020,6 +2109,7 @@
             function startParticles() {
                 stopParticles();
                 const canvas = document.getElementById('finaleCanvas');
+                if (!canvas) return;
                 const ctx = canvas.getContext('2d');
                 canvas.width = canvas.offsetWidth * window.devicePixelRatio;
                 canvas.height = canvas.offsetHeight * window.devicePixelRatio;
@@ -2096,6 +2186,7 @@
                 // Reset
                 animateWaveform(false);
                 stopParticles();
+                clearProcessingTimeouts();
 
                 switch (solutionPhases[phase]) {
                     case 'voice':
@@ -2130,7 +2221,11 @@
             }
 
             // ── Navigation ──
+            function lockNav() { navLocked = true; setTimeout(() => navLocked = false, 400); }
+
             function goNext() {
+                if (navLocked) return;
+                lockNav();
                 // Mobile sub-phases for slides 0 and 1 only (slide 2 has its own phase system)
                 if (isMobile() && currentSlide < 2 && mobilePhase === 'title') {
                     setMobilePhase('content');
@@ -2165,6 +2260,8 @@
             }
 
             function goPrev() {
+                if (navLocked) return;
+                lockNav();
                 // Mobile sub-phases: go back to title first (slides 0 and 1)
                 if (isMobile() && currentSlide < 2 && mobilePhase === 'content') {
                     setMobilePhase('title');
@@ -2340,18 +2437,32 @@
             // ── Fullscreen toggle ──
             function toggleFullscreen() {
                 if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
+                    document.documentElement.requestFullscreen().catch(() => {});
                 } else {
-                    document.exitFullscreen();
+                    document.exitFullscreen().catch(() => {});
                 }
             }
             fsToggle.addEventListener('click', toggleFullscreen);
 
-            // ── Custom cursor ──
+            // ── Resize handler ──
+            window.addEventListener('resize', () => {
+                if (isMobile()) {
+                    if (!document.querySelector('.slide.mobile-phase-title, .slide.mobile-phase-content')) {
+                        setMobilePhase('title');
+                    }
+                }
+            });
+
+            // ── Custom cursor (throttled with rAF) ──
             if (window.innerWidth > 768) {
+                let cursorRaf = null;
                 document.addEventListener('mousemove', (e) => {
-                    customCursor.style.left = e.clientX + 'px';
-                    customCursor.style.top = e.clientY + 'px';
+                    if (cursorRaf) return;
+                    cursorRaf = requestAnimationFrame(() => {
+                        customCursor.style.left = e.clientX + 'px';
+                        customCursor.style.top = e.clientY + 'px';
+                        cursorRaf = null;
+                    });
                 });
                 document.querySelectorAll('button, a, .nav-btn, .lang-toggle, .fs-toggle').forEach(el => {
                     el.addEventListener('mouseenter', () => customCursor.classList.add('hover'));
@@ -2371,21 +2482,7 @@
     </script>
 
     <!-- Copyright Footer -->
-    <div id="copyrightFooter" style="
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        padding: 6px 0;
-        font-family: 'Inter', sans-serif;
-        font-size: 10px;
-        color: rgba(134, 134, 139, 0.5);
-        letter-spacing: 0.5px;
-        z-index: 9999;
-        pointer-events: none;
-        user-select: none;
-    ">© 2026 JF Berthiaume. All Rights Reserved. Proprietary & Confidential.</div>
+    <footer class="copyright-footer">© 2026 JF Berthiaume. All Rights Reserved. Proprietary & Confidential.</footer>
 
     <!-- Watermark invisible -->
     <!-- AIPG-SIGNATURE:7f3a9c2e-b4d1-4e8f-a5c3-9d6f2e1b8a7c:JFBerthiaume:2026 -->

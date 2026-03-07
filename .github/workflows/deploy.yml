@@ -30,8 +30,8 @@ jobs:
               --remove-style-link-type-attributes \
               --minify-css true \
               --minify-js '{"compress":{"drop_console":true},"mangle":true}' \
-              --input "$file" \
-              --output "$file"
+              --output "$file" \
+              "$file"
           done
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3

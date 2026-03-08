@@ -157,13 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fr: {
             'label-1': 'CIBLE', 'label-2': 'PROBLÈME', 'label-3': 'SOLUTION',
             'h1-1': 'Les pro.<br>Qui doivent convaincre.<br>Avant de facturer.',
-            'ticker-1': ['Consultants', 'Freelances', 'Agences', 'Courtiers', 'Construction', 'Pigistes', 'Comptables', 'Avocats', 'Architectes'],
+            'ticker-1': ['Consultants', 'Freelances', 'Entrepreneurs', 'Courtiers', 'Construction', 'Pigistes', 'Professionnels', 'Coachs', 'Créatifs'],
             'm1-title': 'Consultants & Freelances',
-            'm1-desc': 'Travaillent seuls, temps limité pour rédiger des propositions convaincantes.',
-            'm2-title': 'Agences & PME',
-            'm2-desc': 'Volume élevé de soumissions, besoin de standardiser la qualité.',
+            'm1-desc': 'Travaillent seuls. Pas le temps de rédiger — besoin d\'envoyer une proposition claire, vite.',
+            'm2-title': 'PME & Entrepreneurs',
+            'm2-desc': 'Veulent décrocher plus de contrats sans passer des heures à rédiger chaque soumission.',
             'm3-title': 'Construction',
-            'm3-desc': 'Propositions techniques complexes avec devis détaillés et délais stricts.',
+            'm3-desc': 'Doivent soumissionner vite pour ne pas perdre le contrat. Prix, portée, délai — c\'est tout.',
             'h1-2': 'La rédaction<br>Prend Trop<br>De Temps.',
             'ticker-2': ['Collecte d\'infos', 'Rédaction', 'Mise en page', 'Relecture', 'Révisions', 'Envoi', 'Suivi'],
             'm4-title': 'Temps Moyen',
@@ -234,13 +234,13 @@ document.addEventListener('DOMContentLoaded', () => {
         en: {
             'label-1': 'TARGET', 'label-2': 'PROBLEM', 'label-3': 'SOLUTION',
             'h1-1': 'Pros.<br>Who must convince.<br>Before they bill.',
-            'ticker-1': ['Consultants', 'Freelancers', 'Agencies', 'Brokers', 'Construction', 'Accountants', 'Lawyers', 'Architects', 'Engineers'],
+            'ticker-1': ['Consultants', 'Freelancers', 'Entrepreneurs', 'Brokers', 'Construction', 'Coaches', 'Professionals', 'Creatives', 'Designers'],
             'm1-title': 'Consultants & Freelancers',
-            'm1-desc': 'Working alone, limited time to draft convincing proposals.',
-            'm2-title': 'Agencies & SMBs',
-            'm2-desc': 'High volume of submissions, need to standardize quality.',
+            'm1-desc': 'Working solo. No time to draft — need to send a clear proposal, fast.',
+            'm2-title': 'SMBs & Entrepreneurs',
+            'm2-desc': 'Want to land more contracts without spending hours drafting each proposal.',
             'm3-title': 'Construction',
-            'm3-desc': 'Complex technical proposals with detailed quotes and strict timelines.',
+            'm3-desc': 'Must bid fast to not lose the contract. Price, scope, timeline — that\'s it.',
             'h1-2': 'Drafting<br>Takes Too<br>Much Time.',
             'ticker-2': ['Gathering info', 'Drafting', 'Formatting', 'Proofreading', 'Revisions', 'Sending', 'Follow-up'],
             'm4-title': 'Average Time',
@@ -313,14 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Persona data for right-side detail
     const personaData = {
         fr: [
-            { num: '01.01', title: 'Consultants & Freelances', desc: 'Travaillent seuls, temps limité pour rédiger des propositions convaincantes.' },
-            { num: '01.02', title: 'Agences & PME', desc: 'Volume élevé de soumissions, besoin de standardiser la qualité.' },
-            { num: '01.03', title: 'Construction', desc: 'Propositions techniques complexes avec devis détaillés et délais stricts.' }
+            { num: '01.01', title: 'Consultants & Freelances', desc: 'Travaillent seuls. Pas le temps de rédiger — besoin d\'envoyer une proposition claire, vite.' },
+            { num: '01.02', title: 'PME & Entrepreneurs', desc: 'Veulent décrocher plus de contrats sans passer des heures à rédiger chaque soumission.' },
+            { num: '01.03', title: 'Construction', desc: 'Doivent soumissionner vite pour ne pas perdre le contrat. Prix, portée, délai — c\'est tout.' }
         ],
         en: [
-            { num: '01.01', title: 'Consultants & Freelancers', desc: 'Working alone, limited time to draft convincing proposals.' },
-            { num: '01.02', title: 'Agencies & SMBs', desc: 'High volume of submissions, need to standardize quality.' },
-            { num: '01.03', title: 'Construction', desc: 'Complex technical proposals with detailed quotes and strict timelines.' }
+            { num: '01.01', title: 'Consultants & Freelancers', desc: 'Working solo. No time to draft — need to send a clear proposal, fast.' },
+            { num: '01.02', title: 'SMBs & Entrepreneurs', desc: 'Want to land more contracts without spending hours drafting each proposal.' },
+            { num: '01.03', title: 'Construction', desc: 'Must bid fast to not lose the contract. Price, scope, timeline — that\'s it.' }
         ]
     };
 

@@ -1,0 +1,1826 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    /* Colors */
+    --bg-dark: #0a0a0a;
+    --bg-surface: #141414;
+    --bg-card: #1a1a1a;
+    --text-primary: #f5f5f7;
+    --text-secondary: #b4b4ba;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.35);
+    --accent-gradient: linear-gradient(135deg, #3b82f6, #7C3AED);
+    --success-green: #30D158;
+    --danger-red: #FF6961;
+    --iphone-border: #2a2a2e;
+
+    /* Typography */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --text-xs: 0.65rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.15rem;
+    --text-xl: 1.4rem;
+    --text-2xl: 1.8rem;
+    --text-display: clamp(2.5rem, 4vw, 5rem);
+    --text-stat: clamp(4rem, 7vw, 8rem);
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Z-index scale */
+    --z-base: 1;
+    --z-phone: 10;
+    --z-phone-ui: 50;
+    --z-overlay: 100;
+    --z-nav: 200;
+    --z-cursor: 300;
+
+    /* Easing */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+    /* iPhone dimensions */
+    --iphone-width: min(26vw, 42vh, 320px);
+    --iphone-height: calc(var(--iphone-width) * 2.167);
+    --iphone-radius: calc(var(--iphone-width) * 0.165);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    cursor: none;
+}
+
+/* ── Custom Cursor ── */
+.custom-cursor {
+    position: fixed;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--text-primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: var(--z-cursor);
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor.hover {
+    width: 40px;
+    height: 40px;
+    background: var(--text-primary);
+}
+
+/* ── Top Header ── */
+.top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-xl);
+    z-index: var(--z-nav);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.brand {
+    font-size: var(--text-base);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    transition: opacity 0.4s ease, text-shadow 0.4s ease;
+    cursor: pointer;
+}
+
+.brand.brand-hint {
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.2);
+    animation: brand-pulse 2s ease-in-out infinite;
+}
+
+@keyframes brand-pulse {
+    0%, 100% { text-shadow: 0 0 8px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.2); }
+    50% { text-shadow: 0 0 12px rgba(59, 130, 246, 0.7), 0 0 30px rgba(59, 130, 246, 0.35); }
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lang-toggle,
+.fs-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-secondary);
+    font-family: var(--font-main);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    border-radius: var(--radius-sm);
+}
+
+.fs-toggle.fs-glow {
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.5);
+    animation: fs-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fs-pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.15); }
+    50% { box-shadow: 0 0 12px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.25); }
+}
+
+.lang-toggle:hover,
+.fs-toggle:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Slider ── */
+.presentation-wrapper {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider {
+    display: flex;
+    width: 300vw;
+    height: 100vh;
+    transition: transform 0.9s var(--ease-in-out);
+}
+
+.slide {
+    min-width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* ── Ambient Glow ── */
+.ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55vw;
+    height: 55vw;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+    z-index: var(--z-base);
+}
+
+.glow-blue {
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+}
+
+.glow-red {
+    background: radial-gradient(circle, rgba(255, 105, 97, 0.2) 0%, transparent 70%);
+}
+
+.slide.active .ambient-glow {
+    opacity: 0.7;
+}
+
+/* ── Slide Label ── */
+.slide-label {
+    position: absolute;
+    top: calc(50% - 15rem);
+    left: 4vw;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: opacity 0.6s var(--ease-out-expo) 0.2s, transform 0.6s var(--ease-out-expo) 0.2s;
+    z-index: var(--z-phone);
+}
+
+.slide.active .slide-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.label-tag {
+    font-size: var(--text-xl);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+}
+
+.label-text {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 0.6rem;
+}
+
+/* ── iPhone Mockup ── */
+.iphone-mockup {
+    position: relative;
+    width: var(--iphone-width);
+    height: var(--iphone-height);
+    background: #000;
+    border-radius: var(--iphone-radius);
+    border: 3px solid var(--iphone-border);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.8),
+        0 0 0 3px #1a1a1e,
+        0 0 0 4px rgba(255, 255, 255, 0.06),
+        0 30px 80px rgba(0, 0, 0, 0.7),
+        0 0 60px var(--accent-glow);
+    overflow: hidden;
+    z-index: var(--z-phone);
+    flex-shrink: 0;
+}
+
+/* Dynamic Island — flush with top bezel */
+.iphone-mockup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(var(--iphone-width) * 0.34);
+    height: calc(var(--iphone-width) * 0.1);
+    background: #000;
+    border-radius: 0 0 18px 18px;
+    z-index: var(--z-phone-ui);
+}
+
+/* Home Indicator */
+.iphone-mockup::after {
+    content: '';
+    position: absolute;
+    bottom: calc(var(--iphone-width) * 0.025);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(var(--iphone-width) * 0.36);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+    z-index: var(--z-phone-ui);
+}
+
+.iphone-status-bar {
+    position: absolute;
+    top: calc(var(--iphone-width) * 0.02);
+    left: 0;
+    right: 0;
+    height: calc(var(--iphone-width) * 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 calc(var(--iphone-width) * 0.08);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    z-index: var(--z-phone-ui);
+}
+
+.status-icons {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.status-icons svg {
+    width: 13px;
+    height: 13px;
+    fill: var(--text-primary);
+}
+
+.iphone-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    border-radius: var(--iphone-radius);
+}
+
+/* ── SLIDE 1 — CIBLE ── */
+.slide-cible .iphone-mockup {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.8s var(--ease-out-expo) 0.3s, transform 0.8s var(--ease-out-expo) 0.3s;
+}
+
+.slide-cible.active .iphone-mockup {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.stage-text {
+    position: absolute;
+    z-index: var(--z-phone);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+
+.slide.active .stage-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stage-text-left {
+    left: 4vw;
+    top: 50%;
+    transform: translateY(-50%) translateY(30px);
+    max-width: 30vw;
+    text-align: left;
+    transition-delay: 0.5s;
+}
+
+.slide.active .stage-text-left {
+    transform: translateY(-50%) translateY(0);
+}
+
+.stage-text-right {
+    left: 62%;
+    top: 38%;
+    transform: translateY(30px);
+    max-width: 28vw;
+    transition-delay: 0.7s;
+}
+
+.slide.active .stage-text-right {
+    transform: translateY(0);
+}
+
+.stage-text h1 {
+    font-size: var(--text-display);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+}
+
+.stage-text .subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: 1rem;
+}
+
+/* Scrolling ticker for slide 1 subtitle */
+.ticker-wrapper {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 1.5rem;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.ticker-track {
+    display: flex;
+    gap: 0;
+    animation: ticker-scroll 20s linear infinite;
+    width: max-content;
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+.slide:not(.active) .ticker-track {
+    animation-play-state: paused;
+}
+
+.ticker-item {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    padding: 0.4rem 1.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.ticker-item::after {
+    content: '·';
+    position: absolute;
+    right: -0.1rem;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* iPhone video background */
+.iphone-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    filter: brightness(0.82);
+}
+
+/* Persona carousel inside iPhone */
+.persona-carousel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+    padding-top: 3rem;
+}
+
+.persona-card {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: left;
+    padding: 0;
+}
+
+.persona-card.active-persona {
+    display: flex;
+}
+
+.persona-label {
+    font-size: var(--text-sm);
+    font-weight: 900;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    padding: 0 1.2rem;
+    position: relative;
+    z-index: 3;
+}
+
+.persona-desc {
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+    padding: 0 1.2rem;
+    margin-bottom: calc(var(--iphone-width) * 0.2);
+    position: relative;
+    z-index: 3;
+}
+
+.persona-indicator {
+    position: absolute;
+    bottom: calc(var(--iphone-width) * 0.08);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: var(--z-phone);
+}
+
+.persona-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: all 0.3s;
+}
+
+.persona-dot.active {
+    background: var(--accent);
+    width: 18px;
+    border-radius: 3px;
+}
+
+/* Right side persona detail */
+.persona-detail {
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.detail-num {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.6rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.detail-title {
+    font-size: var(--text-2xl);
+    font-weight: 900;
+    margin-bottom: 0.6rem;
+}
+
+.detail-desc {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+
+/* ── SLIDE 2 — PROBLÈME ── */
+.slide-probleme .iphone-mockup {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.8s var(--ease-out-expo) 0.2s, transform 0.8s var(--ease-out-expo) 0.2s;
+}
+
+.slide-probleme.active .iphone-mockup {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.slide-probleme .iphone-mockup {
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(255, 105, 97, 0.2);
+}
+
+/* Pain overlay (over video) */
+.pain-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: calc(var(--iphone-width) * 0.08);
+    padding-bottom: calc(var(--iphone-width) * 0.12);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+}
+
+.pain-doc-header {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    padding: 0.4rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pain-loading-bar {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.pain-loading-fill {
+    height: 100%;
+    background: var(--danger-red);
+    border-radius: 2px;
+    width: 0%;
+}
+
+.slide-probleme.active .pain-loading-fill {
+    animation: painLoading 4s ease-out 0.8s forwards;
+}
+
+@keyframes painLoading {
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 68%;
+    }
+
+    75% {
+        width: 73%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.pain-text-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 0.3rem;
+}
+
+.text-line {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+}
+
+.pain-clock {
+    text-align: center;
+    margin-top: auto;
+    padding: 1rem 0;
+}
+
+.pain-clock-time {
+    font-size: clamp(1.4rem, calc(var(--iphone-width) * 0.14), 2.2rem);
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    color: var(--danger-red);
+}
+
+/* Floating stats */
+.floating-stat {
+    position: absolute;
+    z-index: var(--z-phone);
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.slide-probleme.active .floating-stat {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stat-left-top {
+    left: 6vw;
+    top: 22vh;
+    transition-delay: 0.6s;
+}
+
+.stat-left-bottom {
+    left: 8vw;
+    bottom: 22vh;
+    transition-delay: 1.0s;
+}
+
+.stat-right-center {
+    right: 22vw;
+    top: 50%;
+    transition-delay: 1.4s;
+}
+
+.slide-probleme.active .stat-right-center {
+    transform: translateY(-50%);
+}
+
+.stat-number {
+    font-size: var(--text-stat);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.stat-number.stat-red {
+    color: var(--danger-red);
+}
+
+.stat-label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.stat-right-center .stat-label {
+    font-size: var(--text-lg);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--danger-red);
+    margin-top: 0.8rem;
+}
+
+.stat-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    max-width: 220px;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+/* ── Inner Phone Stats (Slide 2) ── */
+.iphone-inner-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: calc(var(--iphone-width) * 0.15);
+    margin-bottom: 0.8rem;
+    z-index: 10;
+}
+
+.iphone-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 0.8rem var(--space-md);
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.iphone-stat.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.iphone-stat-val {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+}
+
+.iphone-stat-val.stat-red {
+    color: var(--danger-red);
+}
+
+.iphone-stat-title {
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Hide 3rd stat on desktop since it's floating */
+@media (min-width: 769px) {
+    .mobile-only-stat {
+        display: none !important;
+    }
+}
+
+.slide-solution .stage-text h1 {
+    font-size: clamp(2.2rem, 3.2vw, 4rem);
+}
+
+/* ── SLIDE 3 — SOLUTION ── */
+.slide-solution .iphone-solution {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(59, 130, 246, 0.2);
+}
+
+.slide-solution.active .iphone-solution {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Hide phone during reveal */
+.slide-solution.phase-reveal .iphone-solution {
+    transform: scale(0.3);
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+/* Hide title during reveal */
+.slide-solution.phase-reveal .stage-text-left,
+.slide-solution.phase-reveal .stage-text-right {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+
+/* ── Tech Stack (Slide 3 right) ── */
+.tech-stack {
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.tech-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 1rem;
+}
+
+.tech-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tech-item:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tech-badge {
+    display: none;
+}
+
+.tech-info {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+}
+
+.tech-name {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tech-role {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+/* Solution iPhone chat — fullscreen like slides 1-2 */
+.solution-chat-fullscreen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: calc(var(--iphone-width) * 0.32) 0.85rem calc(var(--iphone-width) * 0.06);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    background: #000;
+    border-radius: var(--iphone-radius);
+}
+
+.solution-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--iphone-radius);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.slide-solution.phase-video .solution-video {
+    opacity: 1;
+}
+
+.slide-solution.phase-video .solution-chat-fullscreen {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+/* (Laptop mockup removed — replaced by cinematic reveal) */
+
+/* ── Cinematic Reveal ── */
+.finale-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-nav);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.slide-solution.phase-reveal .finale-overlay {
+    opacity: 1;
+}
+
+.finale-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.finale-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.9) 100%);
+    z-index: 2;
+}
+
+.finale-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+.finale-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.finale-comparison {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.finale-time {
+    font-size: clamp(4rem, 8vw, 9rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    color: white;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.slide-solution.phase-reveal .finale-time {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.finale-vs {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    color: var(--text-secondary);
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.5s;
+}
+
+.slide-solution.phase-reveal .finale-vs {
+    opacity: 1;
+}
+
+.finale-old {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 900;
+    color: #888;
+    position: relative;
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.6s var(--ease-out-expo) 0.8s, transform 0.6s var(--ease-out-expo) 0.8s;
+}
+
+.finale-old .x-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    pointer-events: none;
+}
+
+.finale-old .x-mark line {
+    stroke: #c44;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+}
+
+.slide-solution.phase-reveal .finale-old .x-mark .x1 {
+    animation: draw-x 0.4s ease-out 1s forwards;
+}
+
+.slide-solution.phase-reveal .finale-old .x-mark .x2 {
+    animation: draw-x 0.4s ease-out 1.2s forwards;
+}
+
+@keyframes draw-x {
+    to { stroke-dashoffset: 0; }
+}
+
+.slide-solution.phase-reveal .finale-old {
+    opacity: 0.8;
+    transform: translateY(0);
+}
+
+.finale-tagline {
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 2.5rem;
+    opacity: 0;
+    transition: opacity 0.6s ease 1.2s;
+}
+
+.slide-solution.phase-reveal .finale-tagline {
+    opacity: 1;
+}
+
+/* Hide elements during reveal */
+.slide-solution.phase-reveal .slide-label {
+    opacity: 0;
+}
+
+.slide-solution.phase-reveal .ambient-glow {
+    opacity: 0;
+}
+
+/* ── Navigation ── */
+.nav-zone {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    z-index: var(--z-nav);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+.nav-btn {
+    width: 2.6rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--font-main);
+}
+
+.nav-btn:last-child {
+    border-right: none;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-btn:disabled {
+    opacity: 0.12;
+    cursor: not-allowed;
+}
+
+.nav-btn.hint-pulse {
+    animation: nav-hint 0.6s ease-in-out 5;
+}
+
+@keyframes nav-hint {
+    0%, 100% { background: transparent; }
+    50% { background: var(--accent); color: white; }
+}
+
+.nav-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+}
+
+/* Progress bar */
+.progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.04);
+    z-index: var(--z-nav);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.6s var(--ease-out-expo);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    :root {
+        --iphone-width: min(32vw, 40vh, 280px);
+    }
+
+    .stage-text-left {
+        left: 2vw;
+        max-width: 25vw;
+    }
+
+    .stage-text-right {
+        left: 58%;
+        right: auto;
+        max-width: 18vw;
+    }
+
+    .stage-text h1 {
+        font-size: clamp(2rem, 4vw, 4rem);
+    }
+
+    .stat-number {
+        font-size: clamp(2.5rem, 5vw, 5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --iphone-width: min(50vw, 240px);
+    }
+
+    body {
+        cursor: auto;
+    }
+
+    .custom-cursor, .fs-toggle {
+        display: none;
+    }
+
+    /* Slide label: top-left, avoid phone overlap */
+    .slide-label {
+        top: 5rem;
+        left: 1rem;
+    }
+
+    /* Hide label when phone is visible (content phase) */
+    .slide.mobile-phase-content .slide-label {
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+
+    /* On mobile, title and content are separate full-screen views */
+    /* JS adds .mobile-phase-title or .mobile-phase-content to each slide */
+
+    /* Title: centered on screen, full viewport */
+    .stage-text {
+        position: absolute;
+        left: 50% !important;
+        top: 50% !important;
+        right: auto !important;
+        transform: translate(-50%, -50%) !important;
+        max-width: 85vw !important;
+        text-align: center;
+        transition: opacity 0.5s ease;
+    }
+
+    .stage-text h1 {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+    }
+
+    .stage-text .subtitle {
+        font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    }
+
+    .stage-text-right {
+        display: none;
+    }
+
+    .ticker-item {
+        font-size: clamp(0.8rem, 3vw, 1rem);
+    }
+
+    /* Hide phone during title phase, show during content phase */
+    .slide.mobile-phase-title .iphone-mockup {
+        opacity: 0 !important;
+        transform: scale(0.85) !important;
+        pointer-events: none;
+    }
+
+    .slide.mobile-phase-title .stage-text-left {
+        opacity: 1 !important;
+    }
+
+    .slide.mobile-phase-content .stage-text-left {
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+
+    .slide.mobile-phase-content .iphone-mockup {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+
+    /* Hide desktop floating stats completely on mobile, we use inner stats instead */
+    .floating-stat {
+        display: none !important;
+    }
+
+    .stat-left-top {
+        left: 50% !important;
+        top: 6vh !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+    }
+
+    .stat-left-bottom {
+        left: 3vw !important;
+        bottom: 10vh !important;
+        top: auto !important;
+        right: auto !important;
+    }
+
+    .stat-right-center {
+        right: 3vw !important;
+        top: 55% !important;
+        transform: translateY(-50%) !important;
+        left: auto !important;
+    }
+
+    .stat-number {
+        font-size: clamp(1.8rem, 8vw, 2.5rem);
+        /* Reduced to fit mobile cards */
+    }
+
+    .stat-desc {
+        max-width: 130px;
+        /* Reduced width */
+        font-size: 0.6rem;
+        margin: 0 auto;
+    }
+
+    /* Fix persona text inside phone on mobile */
+    .persona-label {
+        font-size: 0.75rem;
+        padding: 0 0.8rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .persona-desc {
+        font-size: 0.55rem;
+        padding: 0 0.8rem;
+        margin-bottom: calc(var(--iphone-width) * 0.15);
+    }
+
+    /* Reveal */
+    .finale-comparison {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .finale-time {
+        font-size: clamp(3rem, 14vw, 5rem) !important;
+    }
+
+    .finale-old {
+        font-size: clamp(1.5rem, 8vw, 3rem) !important;
+    }
+}
+
+/* ── Cinematic Opening ── */
+.cinematic-curtain {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg-dark);
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+}
+
+.cinematic-curtain.lifted {
+    opacity: 0;
+}
+
+/* ── Kinetic Typography ── */
+.kinetic-line {
+    display: block;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+
+.kinetic-line.from-left {
+    transform: translateX(-40px);
+}
+
+.kinetic-line.from-right {
+    transform: translateX(40px);
+}
+
+.kinetic-line.from-top {
+    transform: translateY(-30px);
+}
+
+.slide.active .kinetic-line.animate-in {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+}
+
+/* Stat emphasis animations */
+@keyframes stat-pulse {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(0) scale(1.15); }
+}
+
+@keyframes stat-shake {
+    0%, 100% { transform: translateY(0); }
+    20% { transform: translateY(0) translateX(-3px); }
+    40% { transform: translateY(0) translateX(3px); }
+    60% { transform: translateY(0) translateX(-2px); }
+    80% { transform: translateY(0) translateX(2px); }
+}
+
+.slide-probleme.active .stat-left-bottom .stat-number {
+    animation: stat-pulse 0.6s var(--ease-out-expo) 1.2s both;
+}
+
+.slide-probleme.active .stat-right-center .stat-number {
+    animation: stat-shake 0.4s ease 1.6s both;
+}
+
+/* ── Glow Pulse (Slide 2) ── */
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.slide-probleme.active .glow-red {
+    animation: glow-pulse 2s ease-in-out 1s infinite;
+}
+
+/* ── Dramatic Pause — disable nav button during stats ── */
+.nav-btn.paused {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* ── Flash Reveal ── */
+.reveal-flash {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: white;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.reveal-flash.flash {
+    animation: flash-burst 0.5s ease-out forwards;
+}
+
+@keyframes flash-burst {
+    0% { opacity: 0; }
+    15% { opacity: 0.35; }
+    100% { opacity: 0; }
+}
+
+/* ── Elastic Bounce for Finale Time ── */
+@keyframes elastic-in {
+    0% { opacity: 0; transform: scale(0.5); }
+    60% { opacity: 1; transform: scale(1.08); }
+    80% { transform: scale(0.97); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.slide-solution.phase-reveal .finale-time {
+    animation: elastic-in 0.8s var(--ease-out-expo) forwards;
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+
+/* ── Branding + CTA ── */
+.finale-brand {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.finale-brand.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.finale-cta {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.9rem 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    pointer-events: auto;
+}
+
+.finale-cta.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: cta-pulse 2s ease-in-out 1s infinite;
+}
+
+.finale-cta:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    animation: none;
+}
+
+@keyframes cta-pulse {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.25); box-shadow: none; }
+    50% { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+}
+
+/* ── Audio Toggle ── */
+.audio-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-secondary);
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.audio-toggle:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.audio-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ── Focus States ── */
+.nav-btn:focus-visible,
+.lang-toggle:focus-visible,
+.fs-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ── Copyright Footer ── */
+.copyright-footer {
+    position: fixed;
+    bottom: 3px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 6px 0;
+    font-family: var(--font-main);
+    font-size: 10px;
+    color: rgba(180, 180, 186, 0.5);
+    letter-spacing: 0.05em;
+    z-index: var(--z-nav);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ── Landscape Mobile ── */
+@media (max-width: 768px) and (orientation: landscape) {
+    .stage-text h1 {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+
+    .stage-text .subtitle {
+        font-size: clamp(0.75rem, 2.5vw, 1rem);
+    }
+
+    :root {
+        --iphone-width: min(30vh, 180px);
+    }
+}
+
+.demo-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    padding-top: calc(var(--iphone-width) * 0.12 + 0.5rem);
+    background: rgba(26, 26, 26, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.demo-chat-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-chat-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.demo-chat-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.demo-chat-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    padding-bottom: calc(var(--iphone-width) * 0.05 + 0.5rem);
+    background: rgba(26, 26, 26, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.demo-input-placeholder {
+    flex: 1;
+    padding: 0.4rem 0.7rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+}
+
+.demo-input-mic {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Chat messages */
+.demo-msg {
+    max-width: 85%;
+    padding: 0.45rem 0.75rem;
+    font-size: var(--text-xs);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    transform: translateY(4px);
+    animation: demoMsgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes demoMsgIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* AI messages — left accent bar */
+.demo-msg-ai {
+    align-self: flex-start;
+    background: none;
+    color: rgba(255, 255, 255, 0.85);
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* User messages — elevated card, right-aligned */
+.demo-msg-user {
+    align-self: flex-end;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 0.5rem 0.8rem;
+    color: white;
+}
+
+/* Success messages (✓) — green accent bar */
+.demo-msg-ai.demo-msg-success {
+    border-left-color: #34d399;
+    color: #6ee7b7;
+}
+
+/* Typing indicator */
+.demo-typing {
+    align-self: flex-start;
+    display: flex;
+    gap: 4px;
+    padding: 0.5rem 0.75rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+    background: none;
+    opacity: 0;
+    animation: demoMsgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.demo-typing span {
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    animation: demoBounce 1.4s ease-in-out infinite;
+}
+
+.demo-typing span:nth-child(2) { animation-delay: 0.15s; }
+.demo-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes demoBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+    30% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* Button groups */
+.demo-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-self: flex-start;
+    padding-left: 0.75rem;
+    margin-left: 2px;
+    opacity: 0;
+    animation: demoMsgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.demo-btn {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: 9999px;
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.8);
+    background: none;
+    cursor: default;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    line-height: 1.3;
+}
+
+.demo-btn.selected {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: #3b82f6;
+    color: #93c5fd;
+}
+
+.demo-btn.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+/* File card */
+.demo-file {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-left: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    animation: demoMsgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.demo-file-icon {
+    font-size: 0.85rem;
+    opacity: 0.6;
+}
+
+/* ── Onboarding Modal ── */
+.onboard-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.88);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.onboard-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: auto;
+}
+
+.onboard-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    z-index: 401;
+    transition: color 0.2s;
+}
+
+.onboard-close:hover {
+    color: var(--text-primary);
+}
+
+.iphone-onboard {
+    transform: scale(0.9);
+    transition: transform 0.5s var(--ease-out-expo);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(59, 130, 246, 0.2);
+}
+
+.onboard-modal.active .iphone-onboard {
+    transform: scale(1);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

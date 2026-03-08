@@ -18,9 +18,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Minify and obfuscate HTML/CSS/JS
+      - name: Minify CSS, JS, and HTML
         run: |
-          npm install -g html-minifier-terser
+          npm install -g html-minifier-terser csso-cli terser
+          csso style.css --output style.css
+          terser script.js --compress drop_console=true --mangle --output script.js
           for file in *.html; do
             html-minifier-terser \
               --collapse-whitespace \
@@ -28,8 +30,6 @@ jobs:
               --remove-redundant-attributes \
               --remove-script-type-attributes \
               --remove-style-link-type-attributes \
-              --minify-css true \
-              --minify-js '{"compress":{"drop_console":true},"mangle":true}' \
               --output "$file" \
               "$file"
           done

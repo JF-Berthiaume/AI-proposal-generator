@@ -31,7 +31,7 @@
             --bg-surface: #141414;
             --bg-card: #1a1a1a;
             --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
+            --text-secondary: #b4b4ba;
             --accent: #3b82f6;
             --accent-glow: rgba(59, 130, 246, 0.35);
             --accent-gradient: linear-gradient(135deg, #3b82f6, #7C3AED);
@@ -41,6 +41,14 @@
 
             /* Typography */
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --text-xs: 0.65rem;
+            --text-sm: 0.8rem;
+            --text-base: 1rem;
+            --text-lg: 1.15rem;
+            --text-xl: 1.4rem;
+            --text-2xl: 1.8rem;
+            --text-display: clamp(2.5rem, 4vw, 5rem);
+            --text-stat: clamp(4rem, 7vw, 8rem);
 
             /* Spacing */
             --space-xs: 0.25rem;
@@ -123,9 +131,9 @@
         }
 
         .brand {
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
+            font-size: var(--text-base);
+            font-weight: 700;
+            letter-spacing: 0.05em;
             color: var(--text-primary);
             transition: opacity 0.4s ease;
             cursor: pointer;
@@ -143,9 +151,9 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--text-secondary);
             font-family: var(--font-main);
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 0.15em;
             padding: 0.35rem 0.75rem;
             cursor: pointer;
             text-transform: uppercase;
@@ -242,8 +250,9 @@
         }
 
         .label-tag {
-            font-size: 1.4rem;
-            font-weight: 800;
+            font-size: var(--text-xl);
+            font-weight: 900;
+            line-height: 1;
             color: var(--accent);
             letter-spacing: 0.05em;
             font-variant-numeric: tabular-nums;
@@ -251,10 +260,11 @@
         }
 
         .label-text {
-            font-size: 1.15rem;
+            font-size: var(--text-lg);
             font-weight: 300;
+            line-height: 1;
             color: var(--text-secondary);
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             border-left: 1px solid rgba(255, 255, 255, 0.15);
             padding-left: 0.6rem;
@@ -318,9 +328,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 calc(var(--iphone-width) * 0.08);
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 0.05em;
             color: var(--text-primary);
             z-index: var(--z-phone-ui);
         }
@@ -398,7 +408,7 @@
         }
 
         .stage-text h1 {
-            font-size: clamp(2.5rem, 4vw, 5rem);
+            font-size: var(--text-display);
             font-weight: 900;
             line-height: 0.95;
             letter-spacing: -0.04em;
@@ -406,7 +416,7 @@
         }
 
         .stage-text .subtitle {
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             color: var(--text-secondary);
             line-height: 1.5;
             margin-top: 1rem;
@@ -437,7 +447,7 @@
         }
 
         .ticker-item {
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             font-weight: 500;
             color: var(--text-secondary);
             white-space: nowrap;
@@ -499,8 +509,8 @@
         }
 
         .persona-label {
-            font-size: 0.9rem;
-            font-weight: 800;
+            font-size: var(--text-sm);
+            font-weight: 900;
             color: var(--text-primary);
             margin-bottom: 0.3rem;
             padding: 0 1.2rem;
@@ -509,7 +519,7 @@
         }
 
         .persona-desc {
-            font-size: 0.7rem;
+            font-size: var(--text-xs);
             color: rgba(255, 255, 255, 0.85);
             line-height: 1.4;
             padding: 0 1.2rem;
@@ -548,22 +558,22 @@
         }
 
         .detail-num {
-            font-size: 1rem;
+            font-size: var(--text-base);
             font-weight: 700;
             color: var(--accent);
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             margin-bottom: 0.6rem;
             font-variant-numeric: tabular-nums;
         }
 
         .detail-title {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: var(--text-2xl);
+            font-weight: 900;
             margin-bottom: 0.6rem;
         }
 
         .detail-desc {
-            font-size: 1.15rem;
+            font-size: var(--text-lg);
             color: var(--text-secondary);
             line-height: 1.55;
         }
@@ -605,7 +615,7 @@
 
         .pain-doc-header {
             font-size: 0.6rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-secondary);
             padding: 0.4rem 0.6rem;
             background: rgba(255, 255, 255, 0.05);
@@ -676,7 +686,7 @@
 
         .pain-clock-time {
             font-size: clamp(1.4rem, calc(var(--iphone-width) * 0.14), 2.2rem);
-            font-weight: 400;
+            font-weight: 300;
             font-variant-numeric: tabular-nums;
             color: var(--danger-red);
         }
@@ -718,7 +728,7 @@
         }
 
         .stat-number {
-            font-size: clamp(4rem, 7vw, 8rem);
+            font-size: var(--text-stat);
             font-weight: 900;
             letter-spacing: -0.04em;
             line-height: 1;
@@ -730,24 +740,24 @@
         }
 
         .stat-label {
-            font-size: 0.7rem;
+            font-size: var(--text-xs);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             color: var(--text-secondary);
             margin-top: 0.5rem;
         }
 
         .stat-right-center .stat-label {
-            font-size: 1.1rem;
-            font-weight: 800;
+            font-size: var(--text-lg);
+            font-weight: 900;
             letter-spacing: 0.15em;
             color: var(--danger-red);
             margin-top: 0.8rem;
         }
 
         .stat-desc {
-            font-size: 0.78rem;
+            font-size: var(--text-sm);
             color: var(--text-secondary);
             max-width: 220px;
             margin-top: 0.25rem;
@@ -795,7 +805,7 @@
         }
 
         .iphone-stat-title {
-            font-size: 0.65rem;
+            font-size: var(--text-xs);
             color: var(--text-secondary);
             text-align: right;
             text-transform: uppercase;
@@ -877,13 +887,13 @@
         }
 
         .tech-name {
-            font-size: 1rem;
+            font-size: var(--text-base);
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .tech-role {
-            font-size: 0.8rem;
+            font-size: var(--text-sm);
             color: var(--text-secondary);
             text-align: right;
         }
@@ -951,13 +961,13 @@
         }
 
         .app-label {
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             font-weight: 700;
             margin-bottom: 1.5rem;
         }
 
         .tap-hint {
-            font-size: 0.7rem;
+            font-size: var(--text-xs);
             color: var(--text-secondary);
             animation: tapPulse 2s ease-in-out infinite;
         }
@@ -1000,14 +1010,14 @@
         }
 
         .voice-status {
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: var(--text-xs);
+            font-weight: 700;
             color: var(--accent);
             letter-spacing: 0.05em;
         }
 
         .transcription {
-            font-size: 0.72rem;
+            font-size: var(--text-xs);
             line-height: 1.55;
             color: var(--text-primary);
             text-align: left;
@@ -1061,8 +1071,8 @@
         }
 
         .processing-text {
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: var(--text-xs);
+            font-weight: 700;
             color: var(--accent);
         }
 
@@ -1072,7 +1082,7 @@
         }
 
         .processing-step {
-            font-size: 0.68rem;
+            font-size: var(--text-xs);
             color: var(--text-secondary);
             margin-bottom: 0.45rem;
             opacity: 0;
@@ -1120,7 +1130,7 @@
         }
 
         .complete-text {
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             font-weight: 700;
             color: var(--success-green);
         }
@@ -1186,7 +1196,7 @@
         .finale-time {
             font-size: clamp(5rem, 12vw, 14rem);
             font-weight: 900;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.04em;
             line-height: 1;
             white-space: nowrap;
             background: linear-gradient(135deg, #f59e0b, #fbbf24);
@@ -1264,7 +1274,7 @@
 
         .finale-tagline {
             font-size: clamp(0.9rem, 1.5vw, 1.3rem);
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
             margin-top: 1.5rem;
             opacity: 0;
@@ -1677,7 +1687,7 @@
             border-radius: var(--radius-md);
             color: var(--accent);
             font-family: var(--font-main);
-            font-size: 0.9rem;
+            font-size: var(--text-sm);
             font-weight: 700;
             letter-spacing: 0.05em;
             text-decoration: none;
@@ -1741,8 +1751,8 @@
             padding: 6px 0;
             font-family: var(--font-main);
             font-size: 10px;
-            color: rgba(161, 161, 166, 0.5);
-            letter-spacing: 0.5px;
+            color: rgba(180, 180, 186, 0.5);
+            letter-spacing: 0.05em;
             z-index: var(--z-nav);
             pointer-events: none;
             user-select: none;
@@ -2330,7 +2340,7 @@
                     'voice-status': 'Écoute en cours...',
                     'processing-text': 'Génération en cours...',
                     'complete-text': 'Proposition envoyée!',
-                    'transcription': "Mon client veut développer son propre agent IA avec des outils. Première étape, automatiser ses propositions. Données au Canada, sécurité entreprise. Budget 10 000$ plus 150$ par mois, livraison d'ici 3 mois.",
+                    'transcription': "Mon client veut développer son propre agent IA avec des outils. Première étape, automatiser ses propositions. Données au Canada, sécurité entreprise. Budget 15 000$ plus 150$ par mois, livraison d'ici 3 mois.",
                     'processing-steps': ['Analyse du brief...', 'Génération de la proposition...', 'Mise en page & envoi...'],
                     'finale-vs': 'au lieu de',
                     'finale-tagline': "L'humain décide. L'IA exécute.",
@@ -2371,7 +2381,7 @@
                     'voice-status': 'Listening...',
                     'processing-text': 'Generating...',
                     'complete-text': 'Proposal sent!',
-                    'transcription': "My client wants to build their own AI agent with tools. First step, automate their proposals. Data in Canada, enterprise security. Budget $10,000 plus $150 per month, delivery within 3 months.",
+                    'transcription': "My client wants to build their own AI agent with tools. First step, automate their proposals. Data in Canada, enterprise security. Budget $15,000 plus $150 per month, delivery within 3 months.",
                     'processing-steps': ['Analyzing brief...', 'Generating proposal...', 'Formatting & sending...'],
                     'finale-vs': 'instead of',
                     'finale-tagline': 'Humans decide. AI executes.',

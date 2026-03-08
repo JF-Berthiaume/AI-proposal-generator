@@ -1184,7 +1184,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.9) 100%);
             z-index: 2;
         }
 
@@ -1203,8 +1203,15 @@
             text-align: center;
         }
 
+        .finale-comparison {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
         .finale-time {
-            font-size: clamp(5rem, 12vw, 14rem);
+            font-size: clamp(4rem, 8vw, 9rem);
             font-weight: 900;
             letter-spacing: -0.04em;
             line-height: 1;
@@ -1224,10 +1231,10 @@
         }
 
         .finale-vs {
-            font-size: 1.2rem;
+            font-size: var(--text-lg);
             font-weight: 300;
-            color: var(--text-primary);
-            margin: 0.8rem 0;
+            color: var(--text-secondary);
+            margin: 0;
             opacity: 0;
             transition: opacity 0.6s ease 0.5s;
         }
@@ -1237,7 +1244,7 @@
         }
 
         .finale-old {
-            font-size: clamp(2rem, 4vw, 4.5rem);
+            font-size: clamp(2.5rem, 5vw, 5rem);
             font-weight: 900;
             color: var(--danger-red);
             position: relative;
@@ -1286,7 +1293,7 @@
             font-size: clamp(0.9rem, 1.5vw, 1.3rem);
             font-weight: 700;
             color: var(--text-primary);
-            margin-top: 1.5rem;
+            margin-top: 2.5rem;
             opacity: 0;
             transition: opacity 0.6s ease 1.2s;
         }
@@ -1536,8 +1543,13 @@
             }
 
             /* Reveal */
+            .finale-comparison {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
             .finale-time {
-                font-size: clamp(3rem, 16vw, 6rem) !important;
+                font-size: clamp(3rem, 14vw, 5rem) !important;
             }
 
             .finale-old {
@@ -1692,20 +1704,20 @@
         .finale-cta {
             display: inline-block;
             margin-top: 1.5rem;
-            padding: 0.75rem 2rem;
-            border: 2px solid var(--accent);
-            border-radius: var(--radius-md);
-            color: var(--accent);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            color: white;
             font-family: var(--font-main);
-            font-size: var(--text-sm);
+            font-size: var(--text-base);
             font-weight: 700;
             letter-spacing: 0.05em;
             text-decoration: none;
             cursor: pointer;
-            background: transparent;
+            background: var(--accent);
             opacity: 0;
             transform: translateY(10px);
-            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), background 0.2s, color 0.2s;
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), box-shadow 0.2s, transform 0.2s;
             pointer-events: auto;
         }
 
@@ -1715,8 +1727,8 @@
         }
 
         .finale-cta:hover {
-            background: var(--accent);
-            color: white;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
         }
 
         /* ── Audio Toggle ── */
@@ -2138,9 +2150,11 @@
                     <div class="finale-gradient"></div>
                     <canvas class="finale-canvas" id="finaleCanvas"></canvas>
                     <div class="finale-content">
-                        <div class="finale-time" id="finaleTime">30 sec.</div>
-                        <div class="finale-vs t-finale-vs">au lieu de</div>
-                        <div class="finale-old">1h+<svg class="x-mark" viewBox="0 0 100 100" aria-hidden="true"><line class="x1" x1="15" y1="15" x2="85" y2="85"/><line class="x2" x1="85" y1="15" x2="15" y2="85"/></svg></div>
+                        <div class="finale-comparison">
+                            <div class="finale-time" id="finaleTime">30 sec.</div>
+                            <div class="finale-vs t-finale-vs">au lieu de</div>
+                            <div class="finale-old">1h+<svg class="x-mark" viewBox="0 0 100 100" aria-hidden="true"><line class="x1" x1="15" y1="15" x2="85" y2="85"/><line class="x2" x1="85" y1="15" x2="15" y2="85"/></svg></div>
+                        </div>
                         <div class="finale-tagline t-finale-tagline">L'humain décide. L'IA exécute.</div>
                         <div class="finale-brand" id="finaleBrand">AI PROPOSAL GENERATOR</div>
                         <div class="finale-cta" id="finaleCta">

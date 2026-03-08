@@ -223,12 +223,6 @@
             transform: translateY(-15px);
             transition: opacity 0.6s var(--ease-out-expo) 0.2s, transform 0.6s var(--ease-out-expo) 0.2s;
             z-index: var(--z-phone);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-md);
-            padding: 0.5rem 1rem;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
         }
 
         .slide.active .slide-label {
@@ -238,18 +232,21 @@
 
         .label-tag {
             font-size: 1.4rem;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--accent);
             letter-spacing: 0.05em;
             font-variant-numeric: tabular-nums;
+            opacity: 0.7;
         }
 
         .label-text {
             font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 0.15em;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.2em;
             text-transform: uppercase;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding-left: 0.6rem;
         }
 
         /* ── iPhone Mockup ── */
@@ -2322,7 +2319,7 @@
                     'voice-status': 'Écoute en cours...',
                     'processing-text': 'Génération en cours...',
                     'complete-text': 'Proposition envoyée!',
-                    'transcription': "Mon client veut une app mobile pour gérer ses rendez-vous, budget 25 000$, livraison en 8 semaines.",
+                    'transcription': "Mon client veut développer son propre agent IA avec des outils. Première étape, automatiser ses propositions. Données au Canada, sécurité entreprise. Budget 10 000$ plus 150$ par mois, livraison d'ici 3 mois.",
                     'processing-steps': ['Analyse du brief...', 'Génération de la proposition...', 'Mise en page & envoi...'],
                     'finale-vs': 'au lieu de',
                     'finale-tagline': "L'humain décide. L'IA exécute.",
@@ -2363,7 +2360,7 @@
                     'voice-status': 'Listening...',
                     'processing-text': 'Generating...',
                     'complete-text': 'Proposal sent!',
-                    'transcription': "My client wants a mobile app to manage appointments, budget $25,000, delivery in 8 weeks.",
+                    'transcription': "My client wants to build their own AI agent with tools. First step, automate their proposals. Data in Canada, enterprise security. Budget $10,000 plus $150 per month, delivery within 3 months.",
                     'processing-steps': ['Analyzing brief...', 'Generating proposal...', 'Formatting & sending...'],
                     'finale-vs': 'instead of',
                     'finale-tagline': 'Humans decide. AI executes.',

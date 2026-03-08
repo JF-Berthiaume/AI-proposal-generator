@@ -149,8 +149,19 @@
             padding: 0.35rem 0.75rem;
             cursor: pointer;
             text-transform: uppercase;
-            transition: color 0.2s, border-color 0.2s;
+            transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
             border-radius: var(--radius-sm);
+        }
+
+        .fs-toggle.fs-glow {
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.5);
+            animation: fs-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fs-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.15); }
+            50% { box-shadow: 0 0 12px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.25); }
         }
 
         .lang-toggle:hover,
@@ -2092,8 +2103,8 @@
                                 <div class="tech-info"><span class="tech-name">PostgreSQL</span><span class="tech-role t-tech-4">Base de données</span></div>
                             </div>
                             <div class="tech-item">
-                                <span class="tech-badge">&#9729;</span>
-                                <div class="tech-info"><span class="tech-name">Heroku</span><span class="tech-role t-tech-5">Déploiement cloud</span></div>
+                                <span class="tech-badge">&lt;/&gt;</span>
+                                <div class="tech-info"><span class="tech-name">HTML / CSS</span><span class="tech-role t-tech-5">Interface & design</span></div>
                             </div>
                         </div>
                     </div>
@@ -2329,7 +2340,7 @@
                     'tech-2': 'Interactivité frontend',
                     'tech-3': 'Génération de propositions',
                     'tech-4': 'Base de données',
-                    'tech-5': 'Déploiement cloud',
+                    'tech-5': 'Interface & design',
                     'fs': 'PLEIN ÉCRAN',
                     'brand': [
                         'Qui sont vos clients?',
@@ -2370,7 +2381,7 @@
                     'tech-2': 'Frontend interactivity',
                     'tech-3': 'Proposal generation',
                     'tech-4': 'Database',
-                    'tech-5': 'Cloud deployment',
+                    'tech-5': 'Interface & design',
                     'fs': 'FULLSCREEN',
                     'brand': [
                         'Who are your clients?',
@@ -2987,9 +2998,11 @@
             });
 
             // ── Fullscreen toggle ──
+            fsToggle.classList.add('fs-glow');
             function toggleFullscreen() {
                 if (!document.fullscreenElement) {
                     document.documentElement.requestFullscreen().catch(() => {});
+                    fsToggle.classList.remove('fs-glow');
                 } else {
                     document.exitFullscreen().catch(() => {});
                 }

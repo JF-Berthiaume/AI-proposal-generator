@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSlides = 3;
     let solutionPhase = -1;
     const solutionPhases = ['chat', 'video', 'reveal'];
-    let isEnglish = false;
+    let isEnglish = true;
     let painClockInterval = null;
     let personaInterval = null;
     let currentPersona = 0;
@@ -469,29 +469,29 @@ document.addEventListener('DOMContentLoaded', () => {
     function getDemoSequence() {
         const t = translations[isEnglish ? 'en' : 'fr'];
         return [
-            { type: 'ai', text: t['demo-greet'], delay: 600 },
-            { type: 'buttons', options: [t['demo-btn-new'], t['demo-btn-followup']], select: 0, delay: 200 },
-            { type: 'select', delay: 1400 },
-            { type: 'ai', text: t['demo-name'], delay: 1000 },
-            { type: 'user', text: t['demo-user-name'], delay: 1400 },
-            { type: 'ai', text: t['demo-email'], delay: 1000 },
-            { type: 'user', text: t['demo-user-email'], delay: 1400 },
-            { type: 'ai', text: t['demo-file-created'], delay: 1000 },
-            { type: 'ai', text: t['demo-type'], delay: 1000 },
-            { type: 'buttons', options: [t['demo-btn-web'], t['demo-btn-mobile'], t['demo-btn-ai']], select: 2, delay: 200 },
-            { type: 'select', delay: 1400 },
-            { type: 'ai', text: t['demo-describe'], delay: 1000 },
-            { type: 'user', text: t['demo-user-need'], delay: 1800 },
-            { type: 'ai', text: t['demo-confirm'], delay: 1000 },
-            { type: 'buttons', options: [t['demo-btn-yes'], t['demo-btn-no']], select: 0, delay: 200 },
-            { type: 'select', delay: 1400 },
-            { type: 'ai', text: t['demo-generating'], delay: 1000 },
-            { type: 'ai', text: t['demo-ready'], delay: 1800 },
-            { type: 'file', text: t['demo-file-name'], delay: 200 },
-            { type: 'ai', text: t['demo-approve-ask'], delay: 1400 },
-            { type: 'buttons', options: [t['demo-btn-approve'], t['demo-btn-edit']], select: 0, delay: 200 },
-            { type: 'select', delay: 1400 },
-            { type: 'ai', text: t['demo-sent'], delay: 1000 },
+            { type: 'ai', text: t['demo-greet'], delay: 400 },
+            { type: 'buttons', options: [t['demo-btn-new'], t['demo-btn-followup']], select: 0, delay: 150 },
+            { type: 'select', delay: 800 },
+            { type: 'ai', text: t['demo-name'], delay: 600 },
+            { type: 'user', text: t['demo-user-name'], delay: 800 },
+            { type: 'ai', text: t['demo-email'], delay: 600 },
+            { type: 'user', text: t['demo-user-email'], delay: 800 },
+            { type: 'ai', text: t['demo-file-created'], delay: 600 },
+            { type: 'ai', text: t['demo-type'], delay: 600 },
+            { type: 'buttons', options: [t['demo-btn-web'], t['demo-btn-mobile'], t['demo-btn-ai']], select: 2, delay: 150 },
+            { type: 'select', delay: 800 },
+            { type: 'ai', text: t['demo-describe'], delay: 600 },
+            { type: 'user', text: t['demo-user-need'], delay: 1000 },
+            { type: 'ai', text: t['demo-confirm'], delay: 600 },
+            { type: 'buttons', options: [t['demo-btn-yes'], t['demo-btn-no']], select: 0, delay: 150 },
+            { type: 'select', delay: 800 },
+            { type: 'ai', text: t['demo-generating'], delay: 600 },
+            { type: 'ai', text: t['demo-ready'], delay: 1000 },
+            { type: 'file', text: t['demo-file-name'], delay: 150 },
+            { type: 'ai', text: t['demo-approve-ask'], delay: 800 },
+            { type: 'buttons', options: [t['demo-btn-approve'], t['demo-btn-edit']], select: 0, delay: 150 },
+            { type: 'select', delay: 800 },
+            { type: 'ai', text: t['demo-sent'], delay: 600 },
         ];
     }
 
@@ -603,22 +603,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function getOnboardSequence() {
         const t = translations[isEnglish ? 'en' : 'fr'];
         return [
-            { type: 'ai', text: t['onboard-welcome'], delay: 800 },
-            { type: 'ai', text: t['onboard-company'], delay: 1500 },
-            { type: 'user', text: t['onboard-user-company'], delay: 2000 },
-            { type: 'ai', text: t['onboard-company-ok'], delay: 1500 },
-            { type: 'ai', text: t['onboard-sector'], delay: 1500 },
-            { type: 'buttons', options: [t['onboard-btn-consulting'], t['onboard-btn-agency'], t['onboard-btn-construction']], select: 1, delay: 300 },
-            { type: 'select', delay: 2000 },
-            { type: 'ai', text: t['onboard-services'], delay: 1500 },
-            { type: 'user', text: t['onboard-user-services'], delay: 2500 },
-            { type: 'ai', text: t['onboard-services-ok'], delay: 1500 },
-            { type: 'ai', text: t['onboard-import'], delay: 1500 },
-            { type: 'buttons', options: [t['onboard-btn-import'], t['onboard-btn-skip']], select: 0, delay: 300 },
-            { type: 'select', delay: 2000 },
-            { type: 'file', text: t['onboard-file'], delay: 300 },
-            { type: 'ai', text: t['onboard-import-ok'], delay: 1500 },
-            { type: 'ai', text: t['onboard-ready'], delay: 1500 },
+            { type: 'ai', text: t['onboard-welcome'], delay: 500 },
+            { type: 'ai', text: t['onboard-company'], delay: 800 },
+            { type: 'user', text: t['onboard-user-company'], delay: 1000 },
+            { type: 'ai', text: t['onboard-company-ok'], delay: 800 },
+            { type: 'ai', text: t['onboard-sector'], delay: 800 },
+            { type: 'buttons', options: [t['onboard-btn-consulting'], t['onboard-btn-agency'], t['onboard-btn-construction']], select: 1, delay: 200 },
+            { type: 'select', delay: 1000 },
+            { type: 'ai', text: t['onboard-services'], delay: 800 },
+            { type: 'user', text: t['onboard-user-services'], delay: 1200 },
+            { type: 'ai', text: t['onboard-services-ok'], delay: 800 },
+            { type: 'ai', text: t['onboard-import'], delay: 800 },
+            { type: 'buttons', options: [t['onboard-btn-import'], t['onboard-btn-skip']], select: 0, delay: 200 },
+            { type: 'select', delay: 1000 },
+            { type: 'file', text: t['onboard-file'], delay: 200 },
+            { type: 'ai', text: t['onboard-import-ok'], delay: 800 },
+            { type: 'ai', text: t['onboard-ready'], delay: 800 },
         ];
     }
 
@@ -1104,6 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     finaleCta.addEventListener('click', openOnboardModal);
 
     // ── Init ──
+    translatePage();
     if (isMobile()) {
         setMobilePhase('title');
     }
